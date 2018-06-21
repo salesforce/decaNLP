@@ -1,0 +1,527 @@
+The city councilmen refused the demonstrators a permit because they [feared/advocated] violence. 
+Who [feared/advocated] violence? 
+councilmen/demonstrators
+
+The trophy doesn't fit into the brown suitcase because it's too [small/large]. 
+What is too [small/large]? 
+suitcase/trophy
+
+Joan made sure to thank Susan for all the help she had [given/received]. 
+Who had [given/received] help? 
+Susan/Joan
+
+Paul tried to call George on the phone, but he wasn't [successful/available]. 
+Who was not [successful/available]? 
+Paul/George
+
+The lawyer asked the witness a question, but he was reluctant to [answer/repeat] it. 
+Who was reluctant to [answer/repeat] the question? 
+witness/lawyer
+
+The delivery truck zoomed by the school bus because it was going so [fast/slow]. 
+What was going so [fast/slow]? 
+truck/bus
+
+Frank felt [vindicated/crushed] when his longtime rival Bill revealed that he was the winner of the competition. 
+Who was the winner of the competition? 
+Frank/Bill
+
+The man couldn't lift his son because he was so [weak/heavy].
+Who was [weak/heavy]? 
+man/son
+
+The large ball crashed right through the table because it was made of [steel/styrofoam]. 
+What was made of [steel/styrofoam]? 
+ball/table
+
+John couldn't see the stage with Billy in front of him because he is so [short/tall]. 
+Who is so [short/tall]? 
+John/Billy
+
+Tom threw his schoolbag down to Ray after he reached the [top/bottom] of the stairs. 
+Who reached the [top/bottom] of the stairs? 
+Tom/Ray
+
+Although they ran at about the same speed, Sue beat Sally because she had such a [good/bad] start. 
+Who had a [good/bad] start? 
+Sue/Sally
+
+The sculpture rolled off the shelf because it wasn't [anchored/level]. 
+What wasn't [anchored/level]? 
+sculpture/shelf
+
+Sam's drawing was hung just above Tina's and it did look much better with another one [below/above] it.
+Which drawing looked better? 
+Sam's/Tina's
+
+Anna did a lot [better/worse] than her good friend Lucy on the test because she had studied so hard. 
+Who studied hard? 
+Anna/Lucy
+
+The firemen arrived [after/before] the police because they were coming from so far away. 
+Who came from far away? 
+firemen/police
+
+Frank was upset with Tom because the toaster he had [bought from/sold to] him didn't work. 
+Who had [bought/sold] the toaster? 
+Frank/Tom
+
+Jim [yelled at/comforted] Kevin because he was so upset. 
+Who was upset? 
+Jim/Kevin
+
+The sack of potatoes had been placed [above/below] the bag of flour, so it had to be moved first. 
+What had to be moved first? 
+sack/bag
+
+Pete envies Martin [because/although] he is very successful. 
+Who is very successful? 
+Martin/Pete
+
+I was trying to balance the bottle upside down on the table, but I couldn't do it because it was so [top-heavy/uneven]. 
+What was [top-heavy/uneven]? 
+bottle/table
+
+I spread the cloth on the table in order to [protect/display] it. 
+To [protect/display] what? 
+table/cloth
+
+The seniors were bullying the freshmen, so we [rescued/punished] them. 
+Which students did we [rescue/punish]? 
+freshmen/seniors
+
+I poured water from the bottle into the cup until it was [full/empty]. 
+What was [full/empty]? 
+cup/bottle
+
+Susan knows all about Ann's personal problems because she is [nosy/indiscreet]. 
+Who is [nosy/indiscreet]? 
+Susan/Anne
+
+Susan knew that Ann's son had been in a car accident, [so/because] she told her about it. 
+Who told whom? 
+Susan/Ann
+
+The police left the house and went into the garage [where/after] they found the murder weapon. 
+Where did they find the murder weapon? 
+garage/house
+
+The painting in Mark's living room shows an oak tree. It is to the right of [the bookcase/a house]. 
+What is to the right of [the bookcase/a house]? 
+painting/tree
+
+That is the gap in the wall. You can see the garden [through/behind] it. 
+You can see the garden [through/behind] what? 
+gap/wall
+
+The drain is clogged with hair. It has to be [cleaned/removed]. 
+What has to be [cleaned/removed]? 
+drain/hair
+
+The meeting started at 4:00 and I needed to catch the train at 4:30, so there wasn't much time. Luckily, it was [short/delayed], so it worked out. 
+What was [short/delayed]? 
+meeting/train
+
+There is a pillar between me and the stage, and I can't [see/see around] it. 
+What can't I [see/see around]? 
+stage/pillar
+
+They broadcast an announcement, but a subway came into the station and I couldn't [hear/hear over] it. 
+What couldn't I [hear/hear over]? 
+announcement/subway
+
+In the middle of the outdoor concert, the rain started falling, [and/but] it continued until 10. 
+What continued until 10? 
+rain/outdoor concert
+
+I used an old rag to clean the knife, and then I put it in the [drawer/trash]. 
+What did I put in the [drawer/trash]? 
+knife/rag
+
+Ann asked Mary what time the library closes, [but/because] she had forgotten. 
+Who had forgotten? 
+Mary/Ann
+
+I took the water bottle out of the backpack so that it would be [lighter/handy]. 
+What would be [lighter/handy]? 
+backpack/bottle
+
+I couldn't put the pot on the shelf because it was too [high/tall]. 
+What was too [high/tall]? 
+shelf/pot
+
+I'm sure that the map will show the building; it is very [famous/good]. 
+What is [famous/good]? 
+building/map
+
+Bob paid for Charlie's college education. He is very [generous/grateful]. 
+Who is [generous/grateful]? 
+Bob/Charlie
+
+Bob paid for Charlie's college education, but now Charlie acts as though it never happened. He is very [hurt/ungrateful]. 
+Who is [hurt/ungrateful]? 
+Bob/Charlie
+
+Bob was playing cards with Adam and was way ahead. If Adam hadn't had a sudden run of good luck, he would have [won/lost]. 
+Who would have [won/lost]? 
+Bob/Adam
+
+Adam can't leave work here until Bob arrives to replace him. If Bob had left home for work on time, he would be [here/gone] by this time. 
+Who would be [here/gone]? 
+Bob/Adam
+
+If the conman had succeeded in fooling Sam, he would have [gotten/lost] a lot of money. 
+Who would have [gotten/lost] the money? 
+conman/Sam
+
+It was a summer afternoon, and the dog was sitting in the middle of the lawn. After a while, it got up and moved to the shade, because it was [hot/cooler].
+What was [hot/cooler]? 
+dog/shade
+
+The cat was lying by the mouse hole waiting for the mouse, but it was too [cautious/impatient]. 
+What was too [cautious/impatient]? 
+mouse/cat
+
+Anne gave birth to her daughter last month. She is a very charming [woman/baby]. 
+Who is a very charming [woman/baby]? 
+Anne/daughter
+
+Alice tried frantically to stop Jane from [chatting/barking] at the party, leaving us to wonder why she was behaving so strangely. 
+Who was behaving strangely? 
+Alice/Jane
+
+I saw Jim yelling at a waiter with a huge beard. I don't know [who/why] he was, but he looked very unhappy. 
+Who looked very unhappy? 
+waiter/Jim
+
+The fish ate the worm. It was [tasty/hungry]. 
+What was [tasty/hungry]? 
+worm/fish
+
+I was trying to open the lock with the key, but someone had filled the keyhole with chewing gum, and I couldn't get it [in/out]. 
+What couldn't I get [in/out]? 
+key/gum
+
+The dog chased the cat, which ran up a tree. It waited at the [top/bottom]. 
+Which waited at the [top/bottom]? 
+cat/dog
+
+In the storm, the tree fell down and crashed through the roof of my house. Now, I have to get it [removed/repaired]. 
+What has to be [removed/repaired]? 
+tree/roof
+
+The customer walked into the bank and stabbed one of the tellers. He was immediately taken to the [emergency room/police station]. 
+Who was taken to the [emergency room/police station]? 
+teller/customer
+
+John was doing research in the library when he heard a hummer. He was very [annoyed/annoying]. 
+Who was [annoyed/annoying]? 
+John/hummer
+
+John was jogging through the park when he saw a juggler juggling watermelons. He was very [impressed/impressive]. 
+Who was [impressed/impressive]? 
+John/juggler
+
+Bob collapsed on the sidewalk. Soon he saw Carl coming to help. He was very [ill/concerned]. 
+Who was [ill/concerned]? 
+Bob/Carl
+
+Mark told Pete many lies about himself, which Pete included in his book. He should have been more [truthful/skeptical]. 
+Who should have been more [truthful/skeptical]? 
+Mark/Pete
+
+Joe has sold his house and bought an apartment a few miles away. He will be moving [out of/into] it on Thursday. 
+What will Joe be moving [out of/into]? 
+house/apartment
+
+Many people start to read Paul's books and can't put them down. They are [gripped/popular] because Paul writes so well. 
+Who or what are [gripped/popular]? 
+people/books
+
+Sam pulled up a chair to the piano, but it was broken, so he had to [stand/sing] instead. 
+What was broken? 
+chair/piano
+
+Since it was raining, I carried the newspaper [over/in] the backpack to keep it dry. 
+What was I trying to keep dry? 
+backpack/newspaper
+
+Sara borrowed the book from the library because she needs it for an article she is working on. She [reads/writes] it when she gets home from work. 
+What does Sara [read/write] when she gets home from work? 
+book/article
+
+This morning, Joey built a sand castle on the beach, and put a toy flag in the highest tower, but this afternoon [a breeze/the tide] knocked it down. 
+What did the [breeze/tide] knock down? 
+flag/castle
+
+Jane knocked on Susan's door, but there was no answer. She was [out/disappointed]. 
+Who was [out/disappointed]? 
+Susan/Jane
+
+Sam took French classes from Adam, because he was [eager/known] to speak it fluently. 
+Who was [eager/known] to speak French fluently? 
+Sam/Adam
+
+The path to the lake was blocked, so we couldn't [reach/use] it. 
+What couldn't we [reach/use]? 
+lake/path
+
+The sun was covered by a thick cloud all morning, but luckily, by the time the picnic started, it was [gone/out]. 
+What was [gone/out]? 
+cloud/sun
+
+We went to the lake, because a shark had been seen at the beach, so it was a [dangerous/safer] place to swim. 
+Which was a [dangerous/safer] place to swim? 
+beach/lake
+
+Sam tried to paint a picture of shepherds with sheep, but they ended up looking more like [dogs/golfers]. 
+What looked like [dogs/golfers]? 
+sheep/shepherds
+
+Mary tucked her daughter Anne into bed, so that she could [sleep/work]. 
+Who is going to [sleep/work]? 
+Anne/Mary
+
+The couple had very warm down coats, but they were not [enough/prepared] for the cold in Alaska. 
+Who or what were not [enough/prepared] for the cold? 
+coats/couple
+
+Thomson visited Cooper's grave in 1765. At that date he had been [dead/travelling] for five years. 
+Who had been [dead/travelling] for five years? 
+Cooper/Thomson
+
+Jackson was greatly influenced by Arnold, though he lived two centuries [earlier/later]. 
+Who lived [earlier/later]? 
+Arnold/Jackson
+
+I can't cut that tree down with that axe; it is too [thick/small]. 
+What is too [thick/small]? 
+tree/axe
+
+The foxes are getting in at night and attacking the chickens. I shall have to [guard/kill] them. 
+What do I have to [guard/kill]? 
+chickens/foxes
+
+The foxes are getting in at night and attacking the chickens. They have gotten very [bold/nervous]. 
+What has gotten [bold/nervous]? 
+foxes/chickens
+
+Fred covered his eyes with his hands, because the wind was blowing sand around. He [opened/lowered] them when the wind stopped. 
+What did Fred [open/lower]? 
+eyes/hands
+
+Fred watched TV while George went out to buy groceries. After an hour he got [up/back]. 
+Who got [up/back]? 
+Fred/George
+
+Fred was supposed to run the dishwasher, but he put it off, because he wanted to watch TV. The show turned out to be boring, so he changed his mind and turned it [on/off].
+What did Fred turn [on/off]? 
+dishwasher/television
+
+Fred is the only man still alive who remembers my grandfather. He [is/was] a remarkable man. 
+Who [is/was] a remarkable man? 
+Fred/grandfather
+
+Fred is the only man alive who still remembers my father as an infant. When Fred first saw my father, he was twelve [years/months] old. 
+Who was twelve [years/months] old? 
+Fred/father
+
+In July, Kamtchatka declared war on Yakutsk. Since Yakutsk's army was much better equipped and ten times larger, they were [victorious/defeated] within weeks. 
+Who was [victorious/defeated] 
+Yakutsk/Kamchatka
+
+Elizabeth moved her company from Sparta to Troy to save money on taxes; the taxes are much [higher/lower] there. 
+Where are the taxes [higher/lower]? 
+Sparta/Troy 
+
+Esther figures that she will save shipping costs if she builds her factory in Springfield instead of Franklin, because [most/none] of her customers live there. 
+In which town do [most/none] of Esther's customers live? 
+Springfield/Franklin
+
+There are too many deer in the park, so the park service brought in a small pack of wolves. The population should [increase/decrease] over the next few years. 
+Which population will [increase/decrease]? 
+wolves/deer 
+
+The archaeologists have concluded that neanderthals lived in Laputa 20,000 years ago. They hunted for [deer/evidence] on the river banks. 
+Who hunted for [deer/evidence]? 
+neanderthals/archaeologists
+
+The scientists are studying three species of fish that have recently been found living in the Indian Ocean. They [appeared/began] two years ago. 
+Who or what [appeared/began] two years ago? 
+fish/scientists
+
+The journalists interviewed the stars of the new movie. They were very [cooperative/persistent], so the interview lasted for a long time. 
+Who was [cooperative/persistent]? 
+stars/journalists
+
+The police arrested all of the criminals. They were trying to [run/stop] the drug trade in the neighborhood. 
+Who was trying to [run/stop] the drug trade? 
+criminals/police
+
+I put the cake away in the refrigerator. It has a lot of [butter/leftovers] in it. 
+What has a lot of [butter/leftovers]? 
+cake/refrigerator
+
+Sam broke both his ankles and he's walking with crutches. But a month or so from now they should be [better/unnecessary]. 
+What should be [better/unnecessary]? 
+ankles/crutches
+
+When the sponsors of the bill got to the town hall, they were surprised to find that the room was full of opponents. They were very much in the [majority/minority]. 
+Who were in the [majority/minority]? 
+opponents/sponsors
+
+Everyone really loved the oatmeal cookies; only a few people liked the snickerdoodle cookies. Next time, we should make [more/fewer] of them. 
+Which cookie should we make [more/fewer] of, next time? 
+oatmeal/snickerdoodle
+
+We had hoped to place copies on all the chairs in the auditorium, but there were simply [not enough/too many] of them. 
+There are [too many/not enough] of what? 
+chairs/copies
+
+I stuck a pin through a carrot. When I pulled the pin out, it [left/had] a hole. 
+What [left/had] a hole? 
+pin/carrot
+
+I couldn't find a spoon, so I tried using a pen to stir my coffee. But that turned out to be a bad idea, because it got full of [ink/coffee]. 
+What got full of [ink/coffee]? 
+coffee/pen
+
+The table won't fit through the doorway because it is too [wide/narrow]. 
+What is too [wide/narrow]? 
+table/doorway
+
+Grace was happy to trade me her sweater for my jacket. She thinks it looks [great/dowdy] on her. 
+What looks [great/dowdy] on Grace? 
+jacket/sweater
+
+Bill thinks that calling attention to himself was rude [to/of] Bert. 
+Who called attention to himself? 
+Bill/Bert
+
+John [promised/ordered] Bill to leave, so an hour later he left. 
+Who left? 
+John/Bill
+
+Sam Goodman's biography of the Spartan general Xenophanes conveys a vivid sense of the difficulties he faced in his [childhood/research]. 
+Who faced difficulties? 
+Xenophanes/Sam
+
+Emma's mother had died long ago, and her [place/education] had been [taken/managed] by an excellent woman as governess. 
+Whose [place/education] had been [taken/managed]? 
+mother's/Emma's
+
+Jane knocked on Susan's door but she did not [answer/get an answer]. 
+Who did not [answer/get an answer]? 
+Susan/Jane
+
+Joe paid the detective after he [received/delivered] the final report on the case. 
+Who [received/delivered] the final report? 
+Joe/ detective
+
+Beth didn't get angry with Sally, who had cut her off, because she stopped and [counted to ten/apologized].
+Who [counted to ten/apologized]? 
+Beth/Sally
+
+Jim signaled the barman and gestured toward his [empty glass/bathroom key]. 
+Whose [empty glass/bathroom key]? 
+Jim's/ barman's
+
+Dan took the rear seat while Bill claimed the front because his "Dibs!" was [quicker/slow]. 
+Whose "Dibs" was [quicker/slow]? 
+Bill's/Dan's
+
+Tom said "Check" to Ralph as he [took/moved] his bishop. 
+Who owned the bishop that Tom [took/moved]? 
+Ralph/Tom
+
+As Andrea in the crop duster passed over Susan, she could see the landing [strip/gear]. 
+Who could see the landing [strip/gear]? 
+Andrea/Susan
+
+Tom gave Ralph a lift to school so he wouldn't have to [walk/drive alone]. 
+Who wouldn't have to [walk/drive alone]? 
+Ralph/Tom
+
+Bill passed the half-empty plate to John because he was [full/hungry]. 
+Who was [full/hungry]? 
+Bill/John
+
+Bill passed the gameboy to John because his turn was [over/next]. 
+Whose turn was [over/next]? 
+Bill's/John's
+
+The man lifted the boy onto his [bunk bed/shoulders]. 
+Whose [bunk bed/shoulders]? 
+boy's/man's
+
+[Patting/Stretching] her back, the woman smiled at the girl. 
+Whose back was the woman [patting/stretching]? 
+girl's/woman's
+
+Billy cried because Toby wouldn't [share/accept] his toy. 
+Who owned the toy? 
+Toby/Billy
+
+Lily spoke to Donna, breaking her [concentration/silence]. 
+Whose [concentration/silence]? 
+Donna's/ Lily's
+
+When Tommy dropped his ice cream, Timmy giggled, so father gave him a [stern/sympathetic] look. 
+Who got the look from father? 
+Timmy/Tommy
+
+As Ollie carried Tommy up the long winding steps, his legs [dangled/ached]. 
+Whose legs [dangled/ached]? 
+Tommy/Ollie
+
+The father carried the sleeping boy in his [arms/bassinet]. 
+Whose [arms/bassinet]? 
+father/boy 
+
+The woman held the girl against her [chest/will]. 
+Whose [chest/will]? 
+woman's/girl's
+
+The doctor informed Kate that she had [cancer/retired] and presented several options for future treatment. 
+Who had [cancer/retired]? 
+Kate/doctor
+
+Dan had to stop Bill from toying with the injured bird. He is very [compassionate/cruel]. 
+Who is [compassionate/cruel]? 
+Dan/Bill
+
+I tried to paint a picture of an orchard, with lemons in the lemon trees, but they came out looking more like [light bulbs/telephone poles]. 
+What looked like [light bulbs/telephone poles]? 
+lemons/trees
+
+James asked Robert for a favor but he [refused/was refused]. 
+Who [refused/was refused]? 
+Robert/James
+
+Kirilov ceded the presidency to Shatov because he was [more/less] popular. 
+Who was [more/less] popular? 
+Shatov/Kirilov
+
+Emma did not pass the ball to Janie although she [was open/saw that she was open]. 
+Who [was open/saw that the other player was open]? 
+Janie/Emma
+
+Joe saw his brother skiing on TV last night but the fool didn't [recognize him/have a coat on] 
+Who is the fool? 
+Joe/brother
+
+Carol believed that Rebecca [suspected/regretted] that she had stolen the watch. 
+Who is [suspected of stealing/stole] the watch? 
+Carol/Rebecca
+
+Alice looked for her friend Jade in the crowd. Since she always [has good luck/wears a red turban], Alice spotted her quickly. 
+Who always [has good luck/wears a red turban] 
+Alice/Jade
+
+During a game of tag, Ethan [chased/ran from] Luke because he was "it". 
+Who was "it"? 
+Ethan/Luke
+
+At the Loebner competition the judges couldn't figure out which respondents were the chatbots because they were so [advanced/stupid]. 
+Who were so [advanced/stupid]? 
+chatbots/judges
