@@ -54,7 +54,7 @@ def parse():
     parser.add_argument('--subsample', default=20000000, type=int, help='subsample the datasets')
     parser.add_argument('--preserve_case', action='store_false', dest='lower', help='whether to preserve casing for all text')
 
-    parser.add_argument('--model', type=str, default='CoattentiveMultipointerGenerator', help='which model to import')
+    parser.add_argument('--model', type=str, default='MultitaskQuestionAnsweringNetwork', help='which model to import')
     parser.add_argument('--dimension', default=200, type=int, help='output dimensions for all layers')
     parser.add_argument('--rnn_layers', default=1, type=int, help='number of layers for RNN modules')
     parser.add_argument('--transformer_layers', default=2, type=int, help='number of layers for transformer modules')
