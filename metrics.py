@@ -9,9 +9,9 @@ import collections
 from multiprocessing import Pool, cpu_count
 from contextlib import closing
 
+import revtok
 from pyrouge import Rouge155
 from sacrebleu import corpus_bleu
-
 
 
 def to_lf(s, table):
