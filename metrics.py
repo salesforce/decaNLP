@@ -201,15 +201,6 @@ def computeEM(outputs, targets):
     outs = [metric_max_over_ground_truths(exact_match, o, t) for o, t in zip(outputs, targets)]
     return sum(outs)/len(outputs) * 100
 
-def computeGLEU(outputs, targets):
-    tokenizer = revtok.tokenize
-
-    outputs = [tokenizer(o) for o in outputs]
-    targets = [[tokenizer(topt) for topt in t] for t in targets]
-
-    return corpus_gleu(targets, outputs) * 100
-
-
 def computeBLEU(outputs, targets):
     targets = [[t[i] for t in targets] for i in range(len(targets[0]))]
     return corpus_bleu(outputs, targets, lowercase=True).score
