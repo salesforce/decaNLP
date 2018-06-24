@@ -25,9 +25,9 @@ def parse():
     Returns the arguments from the command line.
     """
     parser = ArgumentParser()
-    parser.add_argument('--data', default='/runtime/.data/', type=str, help='where to load data from.')
-    parser.add_argument('--save', default='/runtime/results', type=str, help='where to save results.')
-    parser.add_argument('--embeddings', default='/runtime/.embeddings', type=str, help='where to save embeddings.')
+    parser.add_argument('--data', default='/decaNLP/.data/', type=str, help='where to load data from.')
+    parser.add_argument('--save', default='/decaNLP/results', type=str, help='where to save results.')
+    parser.add_argument('--embeddings', default='/decaNLP/.embeddings', type=str, help='where to save embeddings.')
 
     parser.add_argument('--train_tasks', nargs='+', type=str, help='tasks to use for training', required=True)
     parser.add_argument('--train_iterations', nargs='+', type=int, help='number of iterations to focus on each task')
