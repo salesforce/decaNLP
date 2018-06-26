@@ -291,7 +291,7 @@ class PackedLSTM(nn.Module):
         outputs = unpack(outputs, batch_first=self.batch_first)[0]
         _, _indices = torch.sort(indices, 0)
         outputs = outputs[_indices] if self.batch_first else outputs[:, _indices]
-        h, c = h[:, _indices, :], h[:, _indices, :]
+        h, c = h[:, _indices, :], c[:, _indices, :]
         return outputs, (h, c)
 
 
