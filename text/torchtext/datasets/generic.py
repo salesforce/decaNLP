@@ -942,13 +942,16 @@ class WOZ(CQA, data.Dataset):
                                                 delta_state['request'].append(slot[1])
                                                 current_state['request'].append(slot[1])
                                 previous_state = current_state
-                                answer = ', '.join([f'{x[0]}: {x[1]}' for x in delta_state['inform']]) + ';' 
+                                answer = ''
+                                if len(delta_state['inform']) > 0:
+                                    answer = ', '.join([f'{x[0]}: {x[1]}' for x in delta_state['inform']])
+                                answer += ';'
                                 if len(delta_state['request']) > 0:
                                     answer += ' '
                                     answer += ', '.join(delta_state['request'])
                                 ex = {'context': ' '.join(context.split()), 
                                      'question': ' '.join(question.split()), 'lang': lang,
-                                     'answer': answer if len(answer.strip()) > 1 else 'None',
+                                     'answer': answer if len(answer) > 1 else 'None',
                                      'lang_dialogue_turn': f'{lang}_{di}_{ti}'}
                                 split_file.write(json.dumps(ex)+'\n')
 
