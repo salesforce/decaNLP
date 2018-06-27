@@ -942,8 +942,9 @@ class WOZ(CQA, data.Dataset):
                                                 delta_state['request'].append(slot[1])
                                                 current_state['request'].append(slot[1])
                                 previous_state = current_state
-                                answer = ', '.join([f'{x[0]}: {x[1]}' for x in delta_state['inform']]) + '; ' 
+                                answer = ', '.join([f'{x[0]}: {x[1]}' for x in delta_state['inform']]) + ';' 
                                 if len(delta_state['request']) > 0:
+                                    answer += ' '
                                     answer += ', '.join(delta_state['request'])
                                 ex = {'context': ' '.join(context.split()), 
                                      'question': ' '.join(question.split()), 'lang': lang,

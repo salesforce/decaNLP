@@ -5,6 +5,7 @@ import logging
 import os
 import re
 import string
+import numpy as np
 import collections
 from multiprocessing import Pool, cpu_count
 from contextlib import closing
@@ -116,48 +117,44 @@ def computeLFEM(greedy, answer, args):
         except Exception as e:
             continue
     return correct / count * 100, text_answers
+
+
+def score(answer, gold):
+    if len(gold) > 0:
+        gold = set.union(*[simplify(g) for g in gold])
+    answer = simplify(answer)
+    tp, tn, sys_pos, real_pos = 0, 0, 0, 0
+    if answer == gold:
+        if not ('unanswerable' in gold and len(gold) == 1):
+            tp += 1
+        else:
+            tn += 1
+    if not ('unanswerable' in answer and len(answer) == 1):
+        sys_pos += 1
+    if not ('unanswerable' in gold and len(gold) == 1):
+        real_pos += 1
+    return np.array([tp, tn, sys_pos, real_pos])
+
+
+def simplify(answer):
+    return set(''.join(c for c in t if c not in string.punctuation) for t in answer.strip().lower().split()) - {'the', 'a', 'an', 'and', ''}
      
 
+# http://nlp.cs.washington.edu/zeroshot/evaluate.py
 def computeCF1(greedy, answer):
-    def remove_and(text):
-        return re.sub(r'\b(and)\b', ' ', text)
-    greedy_counters = []
-    num_not_null_greedy = 0
-    for g in greedy:
-        clean_g = remove_and(g).split()
-        if (len(clean_g) == 1) and ('unanswerable' ==  clean_g[0]):
-            greedy_counters.append(None)
-        else:
-            greedy_counters.append(collections.Counter(clean_g))
-            num_not_null_greedy += 1
-    answer_counters = []
-    num_not_null_answer = 0
-    for aa in answer:
-        a_counters = []
-        num_not_null_a = 0
-        for a in aa:
-            clean_a = remove_and(a).split()
-            if (len(clean_g) == 1) and ('unanswerable' ==  clean_a[0]):
-                a_counters.append(None)
-            else:
-                a_counters.append(collections.Counter(clean_a))
-                num_not_null_a += 1 
-        if num_not_null_a > 0:
-            num_not_null_answer += 1
-        answer_counters.append(a_counters)
-    num_true_positive = 0
-    for g, aa in zip(greedy_counters, answer_counters):
-        if g == None:
-            continue
-        for a in aa:
-            if a == None: 
-                continue
-            elif a == g:
-                num_true_positive += 1
-                break
-    precision = num_true_positive / num_not_null_greedy 
-    recall = num_true_positive / num_not_null_answer
-    return 2 * (precision * recall) / (precision + recall) * 100, precision * 100, recall * 100
+    scores = np.zeros(4)
+    for g, a in zip(greedy, answer):
+        scores += score(g, a)
+    tp, tn, sys_pos, real_pos = scores.tolist()
+    total = len(answer)
+    if tp == 0:
+        p = r = f = 0.0
+    else:
+        p = tp / float(sys_pos)
+        r = tp / float(real_pos)
+        f = 2 * p * r / (p + r)
+
+    return f * 100, p * 100, r * 100 
 
 def normalize_text(s):
     """Lower text and remove punctuation, articles and extra whitespace."""
@@ -313,7 +310,7 @@ def compute_rouge_scores(summs, refs, splitchar='.', options=None, parallel=True
 def to_delta_state(line):
     delta_state = {'inform': {}, 'request': {}}
     try:
-        if line == 'None' or line.strip() == '':
+        if line == 'None' or line.strip() == '' or line.strip() == ';':
             return delta_state
         inform, request = [[y.strip() for y in x.strip().split(',')] for x in line.split(';')]
         inform_pairs = {}

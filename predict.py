@@ -149,11 +149,14 @@ def get_args():
     parser.add_argument('--tasks', default=['wikisql', 'woz.en', 'cnn_dailymail', 'iwslt.en.de', 'zre', 'srl', 'squad', 'sst', 'multinli.in.out'], nargs='+')
     parser.add_argument('--gpus', type=int, help='gpus to use', required=True)
     parser.add_argument('--seed', default=123, type=int, help='Random seed.')
+    parser.add_argument('--data', default='/decaNLP/.data/', type=str, help='where to load data from.')
+    parser.add_argument('--embeddings', default='/decaNLP/.embeddings', type=str, help='where to save embeddings.')
+
     args = parser.parse_args()
 
     with open(os.path.join(args.path, 'config.json')) as config_file:
         config = json.load(config_file)
-        retrieve = ['model', 'data', 'embeddings', 'val_batch_size',
+        retrieve = ['model', 'val_batch_size',
                     'transformer_layers', 'rnn_layers', 'transformer_hidden', 
                     'dimension', 'load', 'max_val_context_length', 'val_batch_size', 
                     'transformer_heads', 'max_output_length', 'max_generative_vocab', 
