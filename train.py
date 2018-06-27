@@ -336,8 +336,10 @@ def init_opt(args, model):
     return opt
 
 
-if __name__ == '__main__':
+def main():
     args = arguments.parse()
+    if args is None:
+        return
     set_seed(args)
     logger = initialize_logger(args)
     logger.info(f'Arguments:\n{pformat(vars(args))}')
@@ -357,3 +359,8 @@ if __name__ == '__main__':
     else:
         logger.info(f'Processing')
         run(args, run_args, world_size=args.world_size)
+
+
+if __name__ == '__main__':
+    main()
+
