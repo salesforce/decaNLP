@@ -119,7 +119,7 @@ def to_iter(args, world_size, val_batch_size, data, train=True, token_testing=Fa
     return it
 
 
-def get_learning_rate(i):
+def get_learning_rate(i, args):
     return 0.1 * 10 / math.sqrt(args.dimension) * min(
         1 / math.sqrt(i), i / (args.warmup * math.sqrt(args.warmup)))
 
@@ -214,7 +214,7 @@ def train(args, model, opt, train_iters, train_iterations, field, rank=0, world_
                     # lr update
                     lr = opt.param_groups[0]['lr'] 
                     if args.warmup > 0 and args.transformer_lr:
-                        lr = get_learning_rate(iteration) 
+                        lr = get_learning_rate(iteration, args) 
 
                     # param update
                     loss, train_metric_dict = step(model, batch, opt, iteration, field, task, lr=lr, grad_clip=args.grad_clip, writer=writer, it=train_iter)

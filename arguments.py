@@ -71,7 +71,7 @@ def parse():
     parser.add_argument('--resume', action='store_true', help='whether to resume training with past optimizers')
 
     parser.add_argument('--seed', default=123, type=int, help='Random seed.')
-    parser.add_argument('--gpus', nargs='+', type=int, help='a list of gpus that can be used for training (multi-gpu currently WIP)')
+    parser.add_argument('--gpus', default=[0], nargs='+', type=int, help='a list of gpus that can be used for training (multi-gpu currently WIP)')
     parser.add_argument('--backend', default='gloo', type=str, help='backend for distributed training')
 
     parser.add_argument('--no_commit', action='store_false', dest='commit', help='do not track the git commit associated with this training run') 
