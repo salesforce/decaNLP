@@ -45,7 +45,7 @@ class LSTMDecoder(nn.Module):
 
 def positional_encodings_like(x, t=None):
     if t is None:
-        positions = torch.arange(0, x.size(1))
+        positions = torch.arange(0., x.size(1))
         if x.is_cuda:
             positions = positions.cuda(x.get_device())
     else:
