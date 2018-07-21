@@ -1,0 +1,64 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+.project-name {
+  margin-top: 0;
+  margin-bottom: -3rem;
+  font-size: 5.25rem;
+  opacity: 1.0;
+}
+
+.project-tagline {
+  margin-bottom: 2rem;
+  font-weight: normal;
+  opacity: 0.7;
+  font-size: 1.75rem;
+}
+
+.page-header {
+  color: #fff;
+  text-align: center;
+  background-color: #1798c1;
+  background-image: linear-gradient(120deg, #1798c1, #974b94);
+  padding: 2rem 1rem;
+}
+
+body {
+    color: #24292ee6;
+}
+
+.main-content {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+    color: #974b94;
+  }
+}
+
+.performanceTable {
+  margin: 0px 0px;
+  width: 700px
+}
+
+.performanceTable .institution {
+  font-style: italic;
+  font-weight: 300;
+}
+
+.performanceTable .date {
+  font-weight: normal;
+}
+
+.performanceTable td,
+.performanceTable th {
+  text-align: center;
+  max-width: 500px;
+}
