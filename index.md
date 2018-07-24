@@ -1,3 +1,9 @@
+# Overview
+
+Deep learning has significantly improved state-of-the-art performance for natural language processing (NLP) tasks, but each one is typically studied in isolation. 
+The Natural Language Decathlon (decaNLP) is a new benchmark for studying general NLP models that can perform a variety of complex, natural language tasks.
+By requiring a single system to perform ten disparate natural language tasks, decaNLP offers a unique setting for multitask, transfer, and continual learning.
+
 # Leaderboard 
 <hr>
 
