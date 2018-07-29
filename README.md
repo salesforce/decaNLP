@@ -22,7 +22,7 @@ First, make sure you have [docker](https://www.docker.com/get-docker) and [nvidi
 cd dockerfiles && docker build -t decanlp . && cd -
 ```
 
-You will also need to make a `data` directory and move the examples for the Winograd Schemas into it:
+You will also need to make a `.data` directory and move the examples for the Winograd Schemas into it:
 ```bash
 mkdir .data/schema
 mv local_data/schema.txt .data/schema/
