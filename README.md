@@ -5,13 +5,13 @@
 The Natural Language Decathlon is a multitask challenge that spans ten tasks:
 question answering, machine translation, summarization, natural language inference, sentiment analysis, semantic role labeling, zero-shot relation extraction, goal-oriented dialogue, semantic parsing, and commonsense pronoun resolution.
 Each task is cast as question answering, which makes it possible to use our new Multitask Question Answering Network (MQAN).
-This model jointly learns all tasks in decaNLP without any task-specific modules or parameters in the multitask setting. For a more thorough introduction to decaNLP, see our [blog post](https://einstein.ai/research/the-natural-language-decathlon) or [paper](https://arxiv.org/abs/1806.08730).
+This model jointly learns all tasks in decaNLP without any task-specific modules or parameters in the multitask setting. For a more thorough introduction to decaNLP, see the main [website](http://decanlp.com/), our [blog post](https://einstein.ai/research/the-natural-language-decathlon), or the [paper](https://arxiv.org/abs/1806.08730).
 
 ## Leaderboard
 
 | Model | decaNLP | SQuAD | IWSLT | CNN/DM | MNLI | SST | QA&#8209;SRL | QA&#8209;ZRE | WOZ | WikiSQL | MWSC |
 | --- | --- | --- | --- | --- | --- | --- | ---- | ---- | --- | --- |--- | 
-| [MQAN](https://einstein.ai/static/images/pages/research/decaNLP/decaNLP.pdf) | 571.7 | 74.3 | 13.7 | 24.6 | 69.2 | 86.4 | 77.6 | 34.7 | 84.1 | 58.7 | 48.4 |
+| [MQAN](https://einstein.ai/static/images/pages/research/decaNLP/decaNLP.pdf) | 590.5 | 74.4 | 18.6 | 24.3 | 71.5 | 87.4 | 78.4 | 37.6 | 84.8 | 64.77 | 48.7 |
 | [S2S](https://einstein.ai/static/images/pages/research/decaNLP/decaNLP.pdf) | 513.6 | 47.5 | 14.2 | 25.7 | 60.9 | 85.9 | 68.7 | 28.5 | 84.0 | 45.8 | 52.4 |
 
 ## Getting Started
