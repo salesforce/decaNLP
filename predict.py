@@ -151,6 +151,7 @@ def get_args():
     parser.add_argument('--seed', default=123, type=int, help='Random seed.')
     parser.add_argument('--data', default='/decaNLP/.data/', type=str, help='where to load data from.')
     parser.add_argument('--embeddings', default='/decaNLP/.embeddings', type=str, help='where to save embeddings.')
+    parser.add_argument('--checkpoint_name')
 
     args = parser.parse_args()
 
@@ -165,19 +166,22 @@ def get_args():
             setattr(args, r,  config[r])
         args.dropout_ratio = 0.0
 
-#    args.metrics = ['lfem', 'joint_goal_em', 'turn_request_em', 'turn_goal_em', 'rouge_1', 'rouge_2', 'rougeL', 'avg_rouge', 'nf1', 'nem', 'bleu', 'corpus_f1', 'precision', 'recall']
-#    args.deca_metrics = ['lfem', 'joint_goal_em', 'avg_rouge', 'bleu', 'corpus_f1', 'nf1', 'nf1', 'em', 'em']
     args.task_to_metric = {'cnn_dailymail': 'avg_rouge',
         'iwslt.en.de': 'bleu',
-        'multinli.in.out': 'nem',
+        'multinli.in.out': 'em',
         'squad': 'nf1',
         'srl': 'nf1',
-        'sst': 'nf1',
+        'sst': 'em',
         'wikisql': 'lfem',
         'woz.en': 'joint_goal_em',
         'zre': 'corpus_f1',
-        'schema': 'nf1'}
-    args.best_checkpoint = get_best(args)
+        'schema': 'em'}
+
+    if os.path.exists(os.path.join(args.path, 'process_0.log')):
+        args.best_checkpoint = get_best(args, lines)
+    else:
+        args.best_checkpoint = os.path.join(args.path, args.checkpoint_name)
+           
     return args
 
 
