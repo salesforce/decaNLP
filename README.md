@@ -99,7 +99,7 @@ This model is the best MQAN trained on decaNLP so far. It was trained first on S
 
 ```bash
 wget https://s3.amazonaws.com/research.metamind.io/decaNLP/pretrained/mqan_decanlp_qa_first.tar.gz
-unzip mqan_decanlp_qa_first.zip
+tar -xvzf mqan_decanlp_qa_first.tar.gz
 nvidia-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/predict.py --evaluate validation --path /decaNLP/mqan_decanlp_qa_first --checkpoint_name model.pth --gpu 0"
 ```
 
