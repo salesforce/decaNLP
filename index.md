@@ -12,7 +12,7 @@ By requiring a single system to perform ten disparate natural language tasks, de
 <tr><th>Rank</th><th>Model</th><th>decaScore</th><th>Breakdown by Task</th></tr>
 
 <tr>
-<td><p>1</p><span class="date label label-default">May 18, 2018</span></td>
+<td><p>1</p><span class="date label label-default">June 20, 2018</span></td>
 <td>MQAN <p class="institution">Salesforce Research</p> </td>
 <td>590.5</td>
 <td>
