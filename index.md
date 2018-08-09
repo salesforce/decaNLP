@@ -14,18 +14,18 @@ By requiring a single system to perform ten disparate natural language tasks, de
 <tr>
 <td><p>1</p><span class="date label label-default">May 18, 2018</span></td>
 <td>MQAN <p class="institution">Salesforce Research</p> </td>
-<td>571.7</td>
+<td>590.5</td>
 <td>
 <table>
-<tr><th>SQuAD </th><td>74.3</td><th>QA-SRL </th><td>77.6</td></tr>
-<tr><th>IWSLT </th><td>13.7</td><th>QA-ZRE </th><td>34.7</td></tr>
-<tr><th>CNN/DM</th><td>24.6</td><th>WOZ    </th><td>84.1</td></tr>
-<tr><th>MNLI  </th><td>69.2</td><th>WikiSQL</th><td>58.7</td></tr>
-<tr><th>SST   </th><td>86.4</td><th>MWSC   </th><td>48.4</td></tr>
+<tr><th>SQuAD </th><td>74.4</td><th>QA-SRL </th><td>78.4</td></tr>
+<tr><th>IWSLT </th><td>18.6</td><th>QA-ZRE </th><td>37.6</td></tr>
+<tr><th>CNN/DM</th><td>24.3</td><th>WOZ    </th><td>84.8</td></tr>
+<tr><th>MNLI  </th><td>71.5</td><th>WikiSQL</th><td>64.8</td></tr>
+<tr><th>SST   </th><td>87.4</td><th>MWSC   </th><td>48.7</td></tr>
 </table>
 </td>
 </tr>
-
+								
 <tr>
 <td><p>2</p><span class="date label label-default">May 18, 2018</span></td>
 <td style="word-break:break-word;">Sequence-to-sequence baseline <p class="institution">Salesforce Research</p> </td>
