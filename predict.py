@@ -85,6 +85,8 @@ def run(args, field, val_sets, model):
         prediction_file_name = os.path.join(os.path.splitext(args.best_checkpoint)[0], args.evaluate, task + '.txt')
         answer_file_name = os.path.join(os.path.splitext(args.best_checkpoint)[0], args.evaluate, task + '.gold.txt')
         results_file_name = answer_file_name.replace('gold', 'results')
+        if 'sql' in task:
+            ids_file_name = answer_file_name.replace('gold', 'ids')
         if os.path.exists(prediction_file_name):
             print('** ', prediction_file_name, ' already exists**')
         if os.path.exists(answer_file_name):
@@ -94,7 +96,8 @@ def run(args, field, val_sets, model):
             with open(results_file_name) as results_file:
               for l in results_file:
                   print(l)
-            continue
+            if not 'schema' in task:
+                continue
         for x in [prediction_file_name, answer_file_name, results_file_name]:
             os.makedirs(os.path.dirname(x), exist_ok=True)
 
@@ -104,12 +107,20 @@ def run(args, field, val_sets, model):
                 for batch_idx, batch in enumerate(it):
                     _, p = model(batch)
                     p = field.reverse(p)
-                    for pp in p:
+                    for i, pp in enumerate(p):
+                        if 'sql' in task:
+                            wikisql_id = int(batch.wikisql_id[i])
+                            wikisql_ids.append(wikisql_id)
                         prediction_file.write(pp + '\n')
                         predictions.append(pp) 
         else:
             with open(prediction_file_name) as prediction_file:
                 predictions = [x.strip() for x in prediction_file.readlines()] 
+
+        if 'sql' in task:
+            with open(ids_file_name, 'w') as id_file:
+                for i in wikisql_ids:
+                    id_file.write(json.dumps(i) + '\n')
 
         def from_all_answers(an):
             return [it.dataset.all_answers[sid] for sid in an.tolist()] 
@@ -146,7 +157,7 @@ def get_args():
     parser = ArgumentParser()
     parser.add_argument('--path', required=True)
     parser.add_argument('--evaluate', type=str, required=True)
-    parser.add_argument('--tasks', default=['wikisql', 'woz.en', 'cnn_dailymail', 'iwslt.en.de', 'zre', 'srl', 'squad', 'sst', 'multinli.in.out'], nargs='+')
+    parser.add_argument('--tasks', default=['wikisql', 'woz.en', 'cnn_dailymail', 'iwslt.en.de', 'zre', 'srl', 'squad', 'sst', 'multinli.in.out', 'schema'], nargs='+')
     parser.add_argument('--gpus', type=int, help='gpus to use', required=True)
     parser.add_argument('--seed', default=123, type=int, help='Random seed.')
     parser.add_argument('--data', default='/decaNLP/.data/', type=str, help='where to load data from.')
@@ -178,7 +189,7 @@ def get_args():
         'schema': 'em'}
 
     if os.path.exists(os.path.join(args.path, 'process_0.log')):
-        args.best_checkpoint = get_best(args, lines)
+        args.best_checkpoint = get_best(args)
     else:
         args.best_checkpoint = os.path.join(args.path, args.checkpoint_name)
            
