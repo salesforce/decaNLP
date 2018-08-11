@@ -68,9 +68,9 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('data', help='path to the directory containing data for WikiSQL')
     parser.add_argument('predictions', help='path to prediction file, containing one prediction per line')
+    parser.add_argument('ids', help='path to file for indices, a list of integers indicating the index into the dev/test set of the predictions on the corresponding line in \'predicitons\'')
     parser.add_argument('output', help='path for logical forms output line by line')
-    parser.add_argument('evaluate' help='running on the \'validation\' or \'test\' set')
-    parser.add_argument('--ids', help='path to file for indices, a list of integers indicating the index into the dev/test set of the predictions on the corresponding line in \'predicitons\'')
+    parser.add_argument('evaluate', help='running on the \'validation\' or \'test\' set')
     args = parser.parse_args()
     with open(args.predictions) as f:
         greedy = [l for l in f]

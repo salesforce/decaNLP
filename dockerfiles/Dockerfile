@@ -60,4 +60,9 @@ RUN apt-get install --yes \
   libxml-libxml-perl \
   python-lxml
 
+# WikISQL evaluation
+RUN pip install records
+RUN pip install babel
+RUN pip install tabulate
+
 CMD bash 
