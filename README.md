@@ -50,8 +50,6 @@ To train on the entire Natural Language Decathlon:
 nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) decanlp bash -c "python /decaNLP/train.py --train_tasks squad iwslt.en.de cnn_dailymail multinli.in.out sst srl zre woz.en wikisql schema --train_iterations 1 --gpu DEVICE_ID"
 ```
 
-You can find a list of commands in `experiments.sh` that correspond to each trained model that we used to report validation results comparing models and training strategies in the paper.
-
 ### Tensorboard
 
 If you would like to make use of tensorboard, run (typically in a `tmux` pane or equivalent):
