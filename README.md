@@ -118,6 +118,17 @@ docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/WikiSQL
 docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/WikiSQL/evaluate.py /decaNLP/.data/wikisql/data/dev.jsonl /decaNLP/.data/wikisql/data/dev.db /decaNLP/mqan_wikisql/model/test/wikisql_logical_forms.jsonl" # assumes that you have data stored in .data
 ```
 
+## Inference on a Custom Dataset
+
+Using a pretrained model or a model you have trained yourself, you can run on new, custom datasets easily by following the instructions below. In this example, we use the checkpoint for the best MQAN trained on the entirety of decaNLP (see the section on Pretrained Models to see how to get this checkpoint) to run on my_custom_dataset.
+
+```bash
+mkdir .data/my_custom_dataset/
+touch .datda/my_custom_dataset/val.jsonl
+#TODO add examples line by line to val.jsonl in the form of a JSON dict: {"context": "The answer is answer.", "question": "What is the answer?", "answer": "answer"}
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/predict.py --evaluate valid --path /decaNLP/mqan_decanlp_qa_first --checkpoint_name model.pth --gpu 0 --tasks my_custom_dataset"
+```
+
 ## Citation
 
 If you use this in your work, please cite [*The Natural Language Decathlon: Multitask Learning as Question Answering*](https://arxiv.org/abs/1806.08730).
