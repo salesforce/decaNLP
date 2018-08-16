@@ -110,6 +110,7 @@ def run(args, field, val_sets, model):
                     for i, pp in enumerate(p):
                         if 'sql' in task:
                             wikisql_id = int(batch.wikisql_id[i])
+                            wikisql_ids = wikisql_ids if wikisql_ids is not None else []
                             wikisql_ids.append(wikisql_id)
                         prediction_file.write(pp + '\n')
                         predictions.append(pp) 
