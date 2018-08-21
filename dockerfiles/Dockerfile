@@ -64,6 +64,5 @@ RUN apt-get install --yes \
 RUN pip install records
 RUN pip install babel
 RUN pip install tabulate
-RUN pip install pympler
 
 CMD bash 
