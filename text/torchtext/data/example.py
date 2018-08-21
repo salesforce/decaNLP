@@ -1,6 +1,5 @@
 import csv
 import json
-import sys
 
 import six
 
@@ -59,7 +58,7 @@ class Example(object):
             if field is not None:
                 if isinstance(val, six.string_types):
                     val = val.rstrip('\n')
-                setattr(ex, name, [sys.intern(x) for x in field.preprocess(val)])
+                setattr(ex, name, field.preprocess(val))
         return ex
 
     @classmethod
