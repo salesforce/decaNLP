@@ -117,44 +117,44 @@ def get_splits(args, task, FIELD, **kwargs):
         src, trg = ['.'+x for x in task.split('.')[1:]]
         split = torchtext.datasets.generic.Multi30k.splits(exts=(src, trg), 
             fields=FIELD, root=args.data, **kwargs)
-    if 'iwslt' in task:
+    elif 'iwslt' in task:
         src, trg = ['.'+x for x in task.split('.')[1:]]
         split = torchtext.datasets.generic.IWSLT.splits(exts=(src, trg), 
             fields=FIELD, root=args.data, **kwargs)
-    if 'squad' in task:
+    elif 'squad' in task:
         split = torchtext.datasets.generic.SQuAD.splits(
             fields=FIELD, root=args.data, **kwargs)
-    if task == 'wikisql':
+    elif task == 'wikisql':
         split = torchtext.datasets.generic.WikiSQL.splits(
             fields=FIELD, root=args.data, **kwargs)
-    if 'ontonotes.ner' in task:
+    elif 'ontonotes.ner' in task:
         split_task = task.split('.')
         _, _, subtask, nones, counting = split_task
         split = torchtext.datasets.generic.OntoNotesNER.splits(
             subtask=subtask, nones=True if nones == 'nones' else False,
             fields=FIELD, root=args.data, **kwargs)
-    if 'woz' in task:
+    elif 'woz' in task:
         split = torchtext.datasets.generic.WOZ.splits(description=task,
             fields=FIELD, root=args.data, **kwargs)
-    if 'multinli' in task:
+    elif 'multinli' in task:
         split = torchtext.datasets.generic.MultiNLI.splits(description=task,
             fields=FIELD, root=args.data, **kwargs)
-    if 'srl' in task:
+    elif 'srl' in task:
         split = torchtext.datasets.generic.SRL.splits(
             fields=FIELD, root=args.data, **kwargs)
-    if 'snli' in task:
+    elif 'snli' in task:
         split = torchtext.datasets.generic.SNLI.splits(
             fields=FIELD, root=args.data, **kwargs)
-    if 'schema' in task:
+    elif 'schema' in task:
         split = torchtext.datasets.generic.WinogradSchema.splits(
             fields=FIELD, root=args.data, **kwargs)
-    if task == 'cnn':
+    elif task == 'cnn':
         split = torchtext.datasets.generic.CNN.splits(
             fields=FIELD, root=args.data, **kwargs)
-    if task == 'dailymail':
+    elif task == 'dailymail':
         split = torchtext.datasets.generic.DailyMail.splits(
             fields=FIELD, root=args.data, **kwargs)
-    if task == 'cnn_dailymail':
+    elif task == 'cnn_dailymail':
         split_cnn = torchtext.datasets.generic.CNN.splits(
             fields=FIELD, root=args.data, **kwargs)
         split_dm = torchtext.datasets.generic.DailyMail.splits(
@@ -162,14 +162,14 @@ def get_splits(args, task, FIELD, **kwargs):
         for scnn, sdm in zip(split_cnn, split_dm):
             scnn.examples.extend(sdm)
         split = split_cnn
-    if 'sst' in task:
+    elif 'sst' in task:
         split = torchtext.datasets.generic.SST.splits(
             fields=FIELD, root=args.data, **kwargs)
-    if 'imdb' in task:
+    elif 'imdb' in task:
         kwargs['validation'] = None
         split = torchtext.datasets.generic.IMDb.splits(
             fields=FIELD, root=args.data, **kwargs)
-    if 'zre' in task:
+    elif 'zre' in task:
         split = torchtext.datasets.generic.ZeroShotRE.splits(
             fields=FIELD, root=args.data, **kwargs)
     elif os.path.exists(os.path.join(args.data, task)):
