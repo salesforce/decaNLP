@@ -1,6 +1,7 @@
 ![decaNLP Logo](decaNLP_logo.png)
 --------------------------------------------------------------------------------
 [![Build Status](https://travis-ci.org/salesforce/decaNLP.svg?branch=master)](https://travis-ci.org/salesforce/decaNLP)
+[![Run on FH](https://static.floydhub.com/button/button-small.svg)](https://floydhub.com/run)
 
 The Natural Language Decathlon is a multitask challenge that spans ten tasks:
 question answering, machine translation, summarization, natural language inference, sentiment analysis, semantic role labeling, zero-shot relation extraction, goal-oriented dialogue, semantic parsing, and commonsense pronoun resolution.
@@ -10,7 +11,7 @@ This model jointly learns all tasks in decaNLP without any task-specific modules
 ## Leaderboard
 
 | Model | decaNLP | SQuAD | IWSLT | CNN/DM | MNLI | SST | QA&#8209;SRL | QA&#8209;ZRE | WOZ | WikiSQL | MWSC |
-| --- | --- | --- | --- | --- | --- | --- | ---- | ---- | --- | --- |--- | 
+| --- | --- | --- | --- | --- | --- | --- | ---- | ---- | --- | --- |--- |
 | [MQAN](https://einstein.ai/static/images/pages/research/decaNLP/decaNLP.pdf) | 590.5 | 74.4 | 18.6 | 24.3 | 71.5 | 87.4 | 78.4 | 37.6 | 84.8 | 64.8 | 48.7 |
 | [S2S](https://einstein.ai/static/images/pages/research/decaNLP/decaNLP.pdf) | 513.6 | 47.5 | 14.2 | 25.7 | 60.9 | 85.9 | 68.7 | 28.5 | 84.0 | 45.8 | 52.4 |
 
@@ -28,9 +29,39 @@ mkdir .data/schema
 mv local_data/schema.txt .data/schema/
 ```
 
-You can run a command inside the docker image using 
+You can run a command inside the docker image using
 ```bash
 nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) decanlp bash -c "COMMAND"
+```
+
+## Run on FloydHub
+
+[![Run on FloydHub](https://static.floydhub.com/button/button.svg)](https://floydhub.com/run)
+
+Click this button to open a [Workspace](https://blog.floydhub.com/workspaces/) on [FloydHub](https://www.floydhub.com/?utm_medium=readme&utm_source=decanlp&utm_campaign=aug_2018). You can use the workspace to develop and test your code on a fully configured cloud GPU machine.
+
+In the Workspace, you will find the SQuAD 1.1 dataset, GloVe embeddings and the best MQAN trained model. decaNLP comes preinstalled in the environment, you can simply open a [Terminal](https://docs.floydhub.com/guides/workspace/#using-terminal) and start working.
+
+#### Important: reference the library from root
+
+```bash
+ln -s /floyd/home /decaNLP
+```
+
+Run this command every time you will start/restart the Workspace and follow the next sections by running the `COMMAND` of interest.
+
+Here are some examples:
+
+##### Training decaNLP on SQuAD
+
+```bash
+python /decaNLP/train.py --train_tasks squad --gpu 0 --data /floyd/input/data --embeddings /floyd/input/embeddings
+```
+
+##### Evaluating best MQAN trained with decaNLP on SQuAD
+
+```bash
+python /decaNLP/predict.py --evaluate validation --path /floyd/input/pretrained --checkpoint_name model.pth --gpu 0 --task squad
 ```
 
 ## Training
@@ -69,10 +100,10 @@ If you are having trouble with the specified port on either machine, run `lsof -
 ### Caveats During Training
 
 - On a single NVIDIA Volta GPU, the code should take about 3 days to complete 500k iterations. These should be sufficient to approximately reproduce the experiments in the paper. Training for about 7 days should be enough to fully replicate those scores.
-- The model can be resumed using stored checkpoints using `--load <PATH_TO_CHECKPOINT>` and `--resume`. By default, models are stored every `--save_every` iterations in the `results/` folder tree. 
-- During training, validation can be slow! Especially when computing ROUGE scores. Use the `--val_every` flag to change the frequency of validation. 
+- The model can be resumed using stored checkpoints using `--load <PATH_TO_CHECKPOINT>` and `--resume`. By default, models are stored every `--save_every` iterations in the `results/` folder tree.
+- During training, validation can be slow! Especially when computing ROUGE scores. Use the `--val_every` flag to change the frequency of validation.
 - If you run out of memory, reduce `--train_batch_tokens` and `--val_batch_size`.
-- The first time you run, the code will download and cache all considered datasets. Please be advised that this might take a while, especially for some of the larger datasets. 
+- The first time you run, the code will download and cache all considered datasets. Please be advised that this might take a while, especially for some of the larger datasets.
 
 
 

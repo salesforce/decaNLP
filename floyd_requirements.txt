@@ -1,0 +1,7 @@
+git+https://github.com/jekbradbury/revtok.git#egg=revtok
+nltk==3.2.5
+sacrebleu
+records
+babel
+tabulate
+git+git://github.com/andersjo/pyrouge.git#egg=pyrouge

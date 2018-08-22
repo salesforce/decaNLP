@@ -1,0 +1,9 @@
+env: pytorch-0.3
+machine: gpu
+data:
+  - source: floydhub/datasets/decanlp-mqan-pretrained
+    destination: pretrained
+  - source: floydhub/datasets/decanlp-glove-840b-300d
+    destination: embeddings
+  - source: floydhub/datasets/decanlp-squad
+    destination: data
