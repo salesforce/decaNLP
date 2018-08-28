@@ -101,7 +101,7 @@ tar -xvzf mqan_decanlp_qa_first.tar.gz
 nvidia-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/predict.py --evaluate validation --path /decaNLP/mqan_decanlp_qa_first --checkpoint_name model.pth --gpu 0"
 ```
 
-This model is the best MQAN trained on WikiSQL alone, which establised [a new state-of-the-art performance by several points on that task](https://github.com/salesforce/WikiSQL).
+This model is the best MQAN trained on WikiSQL alone, which establised [a new state-of-the-art performance by several points on that task](https://github.com/salesforce/WikiSQL): 73.2/75.4/81.4 (ordered test logical form accuracy, unordered test logical form accuracy, test execution accuracy.
 
 ```bash
 wget https://s3.amazonaws.com/research.metamind.io/decaNLP/pretrained/mqan_wikisql.tar.gz
