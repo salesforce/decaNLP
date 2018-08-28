@@ -7,6 +7,8 @@ from torch import nn
 from torch.nn import functional as F
 from torch.autograd import Variable
 
+from cove import MTLSTM
+
 from .common import positional_encodings_like, INF, EPSILON, TransformerEncoder, TransformerDecoder, PackedLSTM, LSTMDecoderAttention, LSTMDecoder, Embedding, Feedforward, mask
 
 
@@ -19,11 +21,15 @@ class MultitaskQuestionAnsweringNetwork(nn.Module):
         self.pad_idx = self.field.vocab.stoi[self.field.pad_token]
 
         self.encoder_embeddings = Embedding(field, args.dimension, 
-            dropout=args.dropout_ratio)
+            dropout=args.dropout_ratio, project=not args.cove)
         self.decoder_embeddings = Embedding(field, args.dimension, 
-            dropout=args.dropout_ratio)
+            dropout=args.dropout_ratio, project=True)
+
+        if self.args.cove:
+            self.cove = MTLSTM(model_cache=args.embeddings)
+            self.project_cove = Feedforward(1000, args.dimension)
      
-        self.bilstm_before_coattention = PackedLSTM(args.dimension, args.dimension,
+        self.bilstm_before_coattention = PackedLSTM(args.dimension,  args.dimension,
             batch_first=True, dropout=args.dropout_ratio, bidirectional=True, num_layers=1)
         self.coattention = CoattentiveLayer(args.dimension, dropout=0.3)
         dim = 2*args.dimension + args.dimension + args.dimension
@@ -69,6 +75,9 @@ class MultitaskQuestionAnsweringNetwork(nn.Module):
 
         context_embedded = self.encoder_embeddings(context)
         question_embedded = self.encoder_embeddings(question)
+        if self.args.cove:
+            context_embedded = self.project_cove(torch.cat([self.cove(context_embedded[:, :, -300:], context_lengths), context_embedded], -1).detach())
+            question_embedded = self.project_cove(torch.cat([self.cove(question_embedded[:, :, -300:], question_lengths), question_embedded], -1).detach())
 
         context_encoded = self.bilstm_before_coattention(context_embedded, context_lengths)[0]
         question_encoded = self.bilstm_before_coattention(question_embedded, question_lengths)[0]

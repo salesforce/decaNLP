@@ -83,11 +83,12 @@ def prepare_data(args, field, logger):
             vocab_sets.extend(split) 
 
     if args.load is None:
-        logger.info(f'Building vocabulary')
+        logger.info(f'Getting pretrained word vectors')
         char_vectors = torchtext.vocab.CharNGram(cache=args.embeddings)
         glove_vectors = torchtext.vocab.GloVe(cache=args.embeddings)
         vectors = [char_vectors, glove_vectors]
         vocab_sets = (train_sets + val_sets) if len(vocab_sets) == 0 else vocab_sets
+        logger.info(f'Building vocabulary')
         FIELD.build_vocab(*vocab_sets, max_size=args.max_effective_vocab, vectors=vectors)
 
     FIELD.decoder_itos = FIELD.vocab.itos[:args.max_generative_vocab]

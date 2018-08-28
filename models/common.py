@@ -320,23 +320,25 @@ class Feedforward(nn.Module):
 
 class Embedding(nn.Module):
 
-    def __init__(self, field, trained_dimension, dropout=0.0):
+    def __init__(self, field, trained_dimension, dropout=0.0, project=True):
         super().__init__()
         self.field = field
+        self.project = project
         dimension = 0
         pretrained_dimension = field.vocab.vectors.size(-1)
         self.pretrained_embeddings = [nn.Embedding(len(field.vocab), pretrained_dimension)]
         self.pretrained_embeddings[0].weight.data = field.vocab.vectors
         self.pretrained_embeddings[0].weight.requires_grad = False
         dimension += pretrained_dimension
-        self.projection = Feedforward(dimension, trained_dimension)
+        if self.project:
+            self.projection = Feedforward(dimension, trained_dimension)
         dimension = trained_dimension
         self.dropout = nn.Dropout(0.2)
         self.dimension = dimension
 
     def forward(self, x, lengths=None):
         pretrained_embeddings = self.pretrained_embeddings[0](x.cpu()).cuda().detach()
-        return self.projection(pretrained_embeddings)
+        return self.projection(pretrained_embeddings) if self.project else pretrained_embeddings
 
     def set_embeddings(self, w):
         self.pretrained_embeddings[0].weight.data = w
