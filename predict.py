@@ -173,9 +173,12 @@ def get_args():
                     'transformer_layers', 'rnn_layers', 'transformer_hidden', 
                     'dimension', 'load', 'max_val_context_length', 'val_batch_size', 
                     'transformer_heads', 'max_output_length', 'max_generative_vocab', 
-                    'lower']
+                    'lower', 'cove']
         for r in retrieve:
-            setattr(args, r,  config[r])
+            if r in config:
+                setattr(args, r,  config[r])
+            else:
+                setattr(args, r, None)
         args.dropout_ratio = 0.0
 
     args.task_to_metric = {'cnn_dailymail': 'avg_rouge',
