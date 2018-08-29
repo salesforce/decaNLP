@@ -57,9 +57,12 @@ class Example(object):
         ex = cls()
         for (name, field), val in zip(fields, data):
             if field is not None:
-                if isinstance(val, six.string_types):
-                    val = val.rstrip('\n')
-                setattr(ex, name, [sys.intern(x) for x in field.preprocess(val)])
+                if field.numerical:
+                    setattr(ex, name, val)
+                else:
+                    if isinstance(val, six.string_types):
+                        val = val.rstrip('\n')
+                    setattr(ex, name, [sys.intern(x) for x in field.preprocess(val)])
         return ex
 
     @classmethod
