@@ -124,7 +124,7 @@ Using a pretrained model or a model you have trained yourself, you can run on ne
 
 ```bash
 mkdir .data/my_custom_dataset/
-touch .datda/my_custom_dataset/val.jsonl
+touch .data/my_custom_dataset/val.jsonl
 #TODO add examples line by line to val.jsonl in the form of a JSON dict: {"context": "The answer is answer.", "question": "What is the answer?", "answer": "answer"}
 nvidia-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/predict.py --evaluate valid --path /decaNLP/mqan_decanlp_qa_first --checkpoint_name model.pth --gpu 0 --tasks my_custom_dataset"
 ```
