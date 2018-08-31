@@ -50,6 +50,7 @@ class IMDb(CQA, imdb.IMDb):
 
         cache_name = os.path.join(os.path.dirname(path), '.cache', os.path.basename(path), str(subsample))
         if os.path.exists(cache_name):
+            print(f'Loading cached data from {cache_name}')
             examples = torch.load(cache_name)
         else:
             for label in ['pos', 'neg']:
@@ -62,6 +63,7 @@ class IMDb(CQA, imdb.IMDb):
                     if subsample is not None and len(examples) > subsample:
                         break
             os.makedirs(os.path.dirname(cache_name), exist_ok=True)
+            print(f'Caching data to {cache_name}')
             torch.save(examples, cache_name)
         super(imdb.IMDb, self).__init__(examples, fields, **kwargs)
 
@@ -97,6 +99,7 @@ class SST(CQA):
 
         examples = []
         if os.path.exists(cache_name):
+            print(f'Loading cached data from {cache_name}')
             examples = torch.load(cache_name)
         else:
             labels = ['negative', 'positive']
@@ -115,6 +118,7 @@ class SST(CQA):
                         break
        
             os.makedirs(os.path.dirname(cache_name), exist_ok=True)
+            print(f'Caching data to {cache_name}')
             torch.save(examples, cache_name)
 
         self.examples = examples
@@ -155,6 +159,7 @@ class TranslationDataset(translation.TranslationDataset):
         cache_name = os.path.join(os.path.dirname(path), '.cache', os.path.basename(path), str(subsample))
 
         if os.path.exists(cache_name):
+            print(f'Loading cached data from {cache_name}')
             examples = torch.load(cache_name)
         else:
             langs = {'.de': 'German', '.en': 'English', '.fr': 'French', '.ar': 'Arabic', '.cs': 'Czech'}
@@ -176,6 +181,7 @@ class TranslationDataset(translation.TranslationDataset):
 
 
             os.makedirs(os.path.dirname(cache_name), exist_ok=True)
+            print(f'Caching data to {cache_name}')
             torch.save(examples, cache_name)
         super(translation.TranslationDataset, self).__init__(examples, fields, **kwargs)
 
@@ -207,6 +213,7 @@ class SQuAD(CQA, data.Dataset):
 
         examples, all_answers = [], []
         if os.path.exists(cache_name):
+            print(f'Loading cached data from {cache_name}')
             examples, all_answers = torch.load(cache_name)
         else:
             with open(os.path.expanduser(path)) as f:
@@ -295,6 +302,7 @@ class SQuAD(CQA, data.Dataset):
                         break
 
             os.makedirs(os.path.dirname(cache_name), exist_ok=True)
+            print(f'Caching data to {cache_name}')
             torch.save((examples, all_answers), cache_name)
 
 
@@ -361,6 +369,7 @@ class Summarization(CQA, data.Dataset):
 
         examples = []
         if os.path.exists(cache_name):
+            print(f'Loading cached data from {cache_name}')
             examples = torch.load(cache_name)
         else:
             with open(os.path.expanduser(path)) as f:
@@ -374,6 +383,7 @@ class Summarization(CQA, data.Dataset):
                     if subsample is not None and len(examples) >= subsample: 
                         break
             os.makedirs(os.path.dirname(cache_name), exist_ok=True)
+            print(f'Caching data to {cache_name}')
             torch.save(examples, cache_name)
 
         super(Summarization, self).__init__(examples, fields, **kwargs)
@@ -508,6 +518,7 @@ class WikiSQL(CQA, data.Dataset):
 
         cache_name = os.path.join(os.path.dirname(path), '.cache', os.path.basename(path), str(subsample))
         if os.path.exists(cache_name):
+            print(f'Loading cached data from {cache_name}')
             examples, all_answers = torch.load(cache_name)
         else:
 
@@ -544,6 +555,7 @@ class WikiSQL(CQA, data.Dataset):
                         break
 
             os.makedirs(os.path.dirname(cache_name), exist_ok=True)
+            print(f'Caching data to {cache_name}')
             torch.save((examples, all_answers), cache_name)
 
         super(WikiSQL, self).__init__(examples, fields, **kwargs)
@@ -620,6 +632,7 @@ class SRL(CQA, data.Dataset):
 
         examples, all_answers = [], []
         if os.path.exists(cache_name):
+            print(f'Loading cached data from {cache_name}')
             examples, all_answers = torch.load(cache_name)
         else:
             with open(os.path.expanduser(path)) as f:
@@ -636,6 +649,7 @@ class SRL(CQA, data.Dataset):
                     if subsample is not None and len(examples) >= subsample: 
                         break
             os.makedirs(os.path.dirname(cache_name), exist_ok=True)
+            print(f'Caching data to {cache_name}')
             torch.save((examples, all_answers), cache_name)
 
         FIELD = data.Field(batch_first=True, use_vocab=False, sequential=False, 
@@ -770,6 +784,7 @@ class WinogradSchema(CQA, data.Dataset):
 
         cache_name = os.path.join(os.path.dirname(path), '.cache', os.path.basename(path), str(subsample))
         if os.path.exists(cache_name):
+            print(f'Loading cached data from {cache_name}')
             examples = torch.load(cache_name)
         else:
             examples = []
@@ -783,6 +798,7 @@ class WinogradSchema(CQA, data.Dataset):
                     if subsample is not None and len(examples) >= subsample: 
                         break
             os.makedirs(os.path.dirname(cache_name), exist_ok=True)
+            print(f'Caching data to {cache_name}')
             torch.save(examples, cache_name)
 
         super(WinogradSchema, self).__init__(examples, fields, **kwargs)
@@ -885,6 +901,7 @@ class WOZ(CQA, data.Dataset):
         examples, all_answers = [], []
         cache_name = os.path.join(os.path.dirname(path), '.cache', os.path.basename(path), str(subsample), description)
         if os.path.exists(cache_name):
+            print(f'Loading cached data from {cache_name}')
             examples, all_answers = torch.load(cache_name)
         else:
             with open(os.path.expanduser(path)) as f:
@@ -900,6 +917,7 @@ class WOZ(CQA, data.Dataset):
                     if subsample is not None and len(examples) >= subsample: 
                         break
             os.makedirs(os.path.dirname(cache_name), exist_ok=True)
+            print(f'Caching data to {cache_name}')
             torch.save((examples, all_answers), cache_name)
 
         super(WOZ, self).__init__(examples, fields, **kwargs)
@@ -998,6 +1016,7 @@ class MultiNLI(CQA, data.Dataset):
 
         cache_name = os.path.join(os.path.dirname(path), '.cache', os.path.basename(path), str(subsample), description)
         if os.path.exists(cache_name):
+            print(f'Loading cached data from {cache_name}')
             examples = torch.load(cache_name)
         else:
             examples = []
@@ -1012,6 +1031,7 @@ class MultiNLI(CQA, data.Dataset):
                     if subsample is not None and len(examples) >= subsample: 
                         break
             os.makedirs(os.path.dirname(cache_name), exist_ok=True)
+            print(f'Caching data to {cache_name}')
             torch.save(examples, cache_name)
 
         super(MultiNLI, self).__init__(examples, fields, **kwargs)
@@ -1075,6 +1095,7 @@ class ZeroShotRE(CQA, data.Dataset):
 
         cache_name = os.path.join(os.path.dirname(path), '.cache', os.path.basename(path), str(subsample))
         if os.path.exists(cache_name):
+            print(f'Loading cached data from {cache_name}')
             examples = torch.load(cache_name)
         else:
             examples = []
@@ -1089,6 +1110,7 @@ class ZeroShotRE(CQA, data.Dataset):
                     if subsample is not None and len(examples) >= subsample: 
                         break
             os.makedirs(os.path.dirname(cache_name), exist_ok=True)
+            print(f'Caching data to {cache_name}')
             torch.save(examples, cache_name)
 
         super().__init__(examples, fields, **kwargs)
@@ -1200,6 +1222,7 @@ class OntoNotesNER(CQA, data.Dataset):
 
         cache_name = os.path.join(os.path.dirname(path), '.cache', os.path.basename(path), str(subsample), subtask, str(nones))
         if os.path.exists(cache_name):
+            print(f'Loading cached data from {cache_name}')
             examples = torch.load(cache_name)
         else:
             examples = []
@@ -1219,6 +1242,7 @@ class OntoNotesNER(CQA, data.Dataset):
                     if subsample is not None and len(examples) >= subsample: 
                         break
             os.makedirs(os.path.dirname(cache_name), exist_ok=True)
+            print(f'Caching data to {cache_name}')
             torch.save(examples, cache_name)
 
         super(OntoNotesNER, self).__init__(examples, fields, **kwargs)
@@ -1383,6 +1407,7 @@ class SNLI(CQA, data.Dataset):
 
         cache_name = os.path.join(os.path.dirname(path), '.cache', os.path.basename(path), str(subsample))
         if os.path.exists(cache_name):
+            print(f'Loading cached data from {cache_name}')
             examples = torch.load(cache_name)
         else:
             examples = []
@@ -1398,6 +1423,7 @@ class SNLI(CQA, data.Dataset):
                     if subsample is not None and len(examples) >= subsample: 
                         break
             os.makedirs(os.path.dirname(cache_name), exist_ok=True)
+            print(f'Caching data to {cache_name}')
             torch.save(examples, cache_name)
 
         super().__init__(examples, fields, **kwargs)
@@ -1448,6 +1474,7 @@ class JSON(CQA, data.Dataset):
 
         examples = []
         if os.path.exists(cache_name):
+            print(f'Loading cached data from {cache_name}')
             examples = torch.load(cache_name)
         else:
             with open(os.path.expanduser(path)) as f:
@@ -1461,6 +1488,7 @@ class JSON(CQA, data.Dataset):
                     if subsample is not None and len(examples) >= subsample: 
                         break
             os.makedirs(os.path.dirname(cache_name), exist_ok=True)
+            print(f'Caching data to {cache_name}')
             torch.save(examples, cache_name)
 
         super(JSON, self).__init__(examples, fields, **kwargs)
