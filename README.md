@@ -27,7 +27,7 @@ cd dockerfiles && docker build -t decanlp . && cd -
 You will also need to make a `.data` directory and move the examples for the Winograd Schemas into it:
 ```bash
 mkdir -p .data/schema
-mv local_data/schema.txt .data/schema/
+cp local_data/schema.txt .data/schema/
 ```
 
 You can run a command inside the docker image using 
