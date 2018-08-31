@@ -123,9 +123,8 @@ nvidia-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/
 docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/convert_to_logical_forms.py /decaNLP/.data/ /decaNLP/mqan_wikisql/model/validation/wikisql.txt /decaNLP/mqan_wikisql/model/validation/wikisql.ids.txt /decaNLP/mqan_wikisql/model/validation/wikisql_logical_forms.jsonl valid"
 docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/convert_to_logical_forms.py /decaNLP/.data/ /decaNLP/mqan_wikisql/model/test/wikisql.txt /decaNLP/mqan_wikisql/model/test/wikisql.ids.txt /decaNLP/mqan_wikisql/model/test/wikisql_logical_forms.jsonl test"
 git clone https://github.com/salesforce/WikiSQL.git #git@github.com:salesforce/WikiSQL.git for ssh
-cd WikiSQL
 docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/WikiSQL/evaluate.py /decaNLP/.data/wikisql/data/dev.jsonl /decaNLP/.data/wikisql/data/dev.db /decaNLP/mqan_wikisql/model/validation/wikisql_logical_forms.jsonl" # assumes that you have data stored in .data
-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/WikiSQL/evaluate.py /decaNLP/.data/wikisql/data/dev.jsonl /decaNLP/.data/wikisql/data/dev.db /decaNLP/mqan_wikisql/model/test/wikisql_logical_forms.jsonl" # assumes that you have data stored in .data
+docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/WikiSQL/evaluate.py /decaNLP/.data/wikisql/data/test.jsonl /decaNLP/.data/wikisql/data/test.db /decaNLP/mqan_wikisql/model/test/wikisql_logical_forms.jsonl" # assumes that you have data stored in .data
 ```
 
 ## Inference on a Custom Dataset
