@@ -74,8 +74,8 @@ Dialogue state tracking is a key component of goal-oriented dialogue systems. Ba
 ### Semantic Parsing
 Semantic parsing requires models to translate unstructured information into structured formats so that users can interact with structured information (e.g. a database) in natural language . decaNLP includes the <a href="https://github.com/salesforce/WikiSQL">WikiSQL</a> dataset, which maps natural language questions into structured SQL queries.
 
-### Commonsense Pronoun Resolution
-As an example of commonsense pronoun resolution, models are required to answer questions like "Joan made sure to thank Susan for the help she had [given/received]. Who had [given/received] help? Susan or Joan?". We started with examples taken from the Winograd Schema Challenge and modified them (resulting in the <a href="https://github.com/salesforce/decaNLP/blob/master/local_data/schema.txt">Modified Winograd Schema Challenge, MWSC</a>) to ensure that answers were a single word from the context and scores are neither inflated nor deflated by oddities in phrasing or inconsistencies between context, question, and answer.
+### Commonsense Reasoning
+As an example of commonsense reasoning, models are required to answer questions like "Joan made sure to thank Susan for the help she had [given/received]. Who had [given/received] help? Susan or Joan?". We started with examples taken from the Winograd Schema Challenge and modified them (resulting in the <a href="https://github.com/salesforce/decaNLP/blob/master/local_data/schema.txt">Modified Winograd Schema Challenge, MWSC</a>) to ensure that answers were a single word from the context and scores are neither inflated nor deflated by oddities in phrasing or inconsistencies between context, question, and answer.
 
 
 # FAQ
