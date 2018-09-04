@@ -157,8 +157,8 @@ def run(args, field, val_sets, model):
 
             print(metrics)
             if not args.silent:
-                for p, a in zip(predictions, answers):
-                    print(f'Prediction: {p}\nAnswer: {a}\n')
+                for i, (p, a) in enumerate(zip(predictions, answers)):
+                    print(f'Prediction {i+1}: {p}\nAnswer {i+1}: {a}\n')
 
 
 def get_args():

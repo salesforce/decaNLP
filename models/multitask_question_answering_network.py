@@ -25,9 +25,10 @@ class MultitaskQuestionAnsweringNetwork(nn.Module):
         self.decoder_embeddings = Embedding(field, args.dimension, 
             dropout=args.dropout_ratio, project=True)
 
-        if self.args.cove:
-            self.cove = MTLSTM(model_cache=args.embeddings)
-            self.project_cove = Feedforward(1000, args.dimension)
+        if self.args.cove or self.args.intermediate_cove:
+            self.cove = MTLSTM(model_cache=args.embeddings, layer0=args.intermediate_cove, layer1=args.cove)
+            cove_dim = int(args.intermediate_cove) * 600 + int(args.cove) * 600 + 400 # the last 400 is for GloVe and char n-gram embeddings
+            self.project_cove = Feedforward(cove_dim, args.dimension)
      
         self.bilstm_before_coattention = PackedLSTM(args.dimension,  args.dimension,
             batch_first=True, dropout=args.dropout_ratio, bidirectional=True, num_layers=1)

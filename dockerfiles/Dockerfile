@@ -61,9 +61,10 @@ RUN apt-get install --yes \
   python-lxml
 
 # WikISQL evaluation
-RUN pip install -e git+git://github.com/salesforce/cove.git#egg=cove
 RUN pip install records
 RUN pip install babel
 RUN pip install tabulate
+
+RUN pip install -e git+git://github.com/salesforce/cove.git#egg=cove
 
 CMD bash 
