@@ -66,5 +66,6 @@ RUN pip install babel
 RUN pip install tabulate
 
 RUN pip install -e git+git://github.com/salesforce/cove.git#egg=cove
+#RUN pip install allennlp
 
 CMD bash 

@@ -124,9 +124,9 @@ def get_splits(args, task, FIELD, **kwargs):
     elif 'squad' in task:
         split = torchtext.datasets.generic.SQuAD.splits(
             fields=FIELD, root=args.data, description=task, **kwargs)
-    elif task == 'wikisql':
+    elif 'wikisql' in task:
         split = torchtext.datasets.generic.WikiSQL.splits(
-            fields=FIELD, root=args.data, **kwargs)
+            fields=FIELD, root=args.data, query_as_question='query_as_question' in task, **kwargs)
     elif 'ontonotes.ner' in task:
         split_task = task.split('.')
         _, _, subtask, nones, counting = split_task

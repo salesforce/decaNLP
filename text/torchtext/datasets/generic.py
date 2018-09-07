@@ -509,14 +509,14 @@ class WikiSQL(CQA, data.Dataset):
     name = 'wikisql'
     dirname = 'data'
 
-    def __init__(self, path, field, one_answer=True, subsample=None, **kwargs):
+    def __init__(self, path, field, query_as_question=False, subsample=None, **kwargs):
         fields = [(x, field) for x in self.fields]
         FIELD = data.Field(batch_first=True, use_vocab=False, sequential=False, 
             lower=False, numerical=True, eos_token=field.eos_token, init_token=field.init_token)
         fields.append(('wikisql_id', FIELD))
 
 
-        cache_name = os.path.join(os.path.dirname(path), '.cache', os.path.basename(path), str(subsample))
+        cache_name = os.path.join(os.path.dirname(path), '.cache', 'query_as_question' if query_as_question else 'query_as_context', os.path.basename(path), str(subsample))
         if os.path.exists(cache_name):
             print(f'Loading cached data from {cache_name}')
             examples, all_answers = torch.load(cache_name)
@@ -535,18 +535,18 @@ class WikiSQL(CQA, data.Dataset):
             with open(expanded_path) as example_file:
                 for idx, line in enumerate(example_file):
                     entry = json.loads(line)
-                    context = entry['question']
+                    human_query = entry['question']
                     table = id_to_tables[entry['table_id']]
                     sql = entry['sql']
                     header = table['header']
                     answer = repr(Query.from_dict(sql, header))
-                    question = 'What is the translation from English to SQL?'
-                    qa = {'context': (f'The table has columns {", ".join(table["header"])} ' +
-                              f'and key words {", ".join(Query.agg_ops[1:] + Query.cond_ops + Query.syms)} ' + 
-                              f'-- {context}'), 
-                          'question': question, 
-                          'answer': answer}
-                    context, question, answer = qa['context'], qa['question'], qa['answer']
+                    context = (f'The table has columns {", ".join(table["header"])} ' +
+                               f'and key words {", ".join(Query.agg_ops[1:] + Query.cond_ops + Query.syms)}')
+                    if query_as_question:
+                        question = human_query
+                    else:
+                        question = 'What is the translation from English to SQL?'
+                        context += f'-- {human_query}'  
                     context_question = get_context_question(context, question) 
                     ex = data.Example.fromlist([context, question, answer, CONTEXT_SPECIAL, QUESTION_SPECIAL, context_question, idx], fields)
                     examples.append(ex)
@@ -579,9 +579,9 @@ class WikiSQL(CQA, data.Dataset):
         train_data = None if train is None else cls(
             os.path.join(path, train), fields, **kwargs)
         validation_data = None if validation is None else cls(
-            os.path.join(path, validation), fields, one_answer=False, **kwargs)
+            os.path.join(path, validation), fields, **kwargs)
         test_data = None if test is None else cls(
-            os.path.join(path, test), fields, one_answer=False, **kwargs)
+            os.path.join(path, test), fields, **kwargs)
         return tuple(d for d in (train_data, validation_data, test_data)
                      if d is not None)
 
