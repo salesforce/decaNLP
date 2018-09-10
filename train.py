@@ -133,9 +133,9 @@ def step(model, batch, opt, iteration, field, task, lr=None, grad_clip=None, wri
     if lr is not None:
         opt.param_groups[0]['lr'] = lr
     if grad_clip > 0.0:
-        torch.nn.utils.clip_grad_norm(model.params, grad_clip)
+        torch.nn.utils.clip_grad_norm_(model.params, grad_clip)
     opt.step()
-    return loss.data[0], {}
+    return loss.item(), {}
 
 
 def train(args, model, opt, train_iters, train_iterations, field, rank=0, world_size=1, 
