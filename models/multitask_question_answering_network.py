@@ -8,9 +8,9 @@ from torch.nn import functional as F
 from torch.autograd import Variable
 
 from cove import MTLSTM
-#from allennlp.modules.elmo import Elmo
-#options_file = "https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_options.json"
-#weight_file = "https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5"
+from allennlp.modules.elmo import Elmo
+options_file = "https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_options.json"
+weight_file = "https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5"
 
 
 from .common import positional_encodings_like, INF, EPSILON, TransformerEncoder, TransformerDecoder, PackedLSTM, LSTMDecoderAttention, LSTMDecoder, Embedding, Feedforward, mask
@@ -35,7 +35,7 @@ class MultitaskQuestionAnsweringNetwork(nn.Module):
             self.project_cove = Feedforward(cove_dim, args.dimension)
      
         self.bilstm_before_coattention = PackedLSTM(args.dimension,  args.dimension,
-            batch_first=True, dropout=args.dropout_ratio, bidirectional=True, num_layers=1)
+            batch_first=True, bidirectional=True, num_layers=1)
         self.coattention = CoattentiveLayer(args.dimension, dropout=0.3)
         dim = 2*args.dimension + args.dimension + args.dimension
 
