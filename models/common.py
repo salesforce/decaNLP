@@ -308,7 +308,7 @@ class Feedforward(nn.Module):
     def __init__(self, d_in, d_out, activation=None, bias=True, dropout=0.2):
         super().__init__()
         if activation is not None:
-            self.activation = getattr(F, activation)
+            self.activation = getattr(torch, activation)
         else:
             self.activation = lambda x: x
         self.linear = Linear(d_in, d_out, bias=bias)

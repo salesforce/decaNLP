@@ -23,6 +23,8 @@ class MultitaskQuestionAnsweringNetwork(nn.Module):
         self.field = field
         self.args = args
         self.pad_idx = self.field.vocab.stoi[self.field.pad_token]
+        def dp(args):
+            return args.dropout_ratio if args.rnn_layers > 1 else 0.
 
         self.encoder_embeddings = Embedding(field, args.dimension, 
             dropout=args.dropout_ratio, project=not args.cove)
@@ -35,24 +37,24 @@ class MultitaskQuestionAnsweringNetwork(nn.Module):
             self.project_cove = Feedforward(cove_dim, args.dimension)
      
         self.bilstm_before_coattention = PackedLSTM(args.dimension,  args.dimension,
-            batch_first=True, bidirectional=True, num_layers=1)
+            batch_first=True, bidirectional=True, num_layers=1, dropout=0)
         self.coattention = CoattentiveLayer(args.dimension, dropout=0.3)
         dim = 2*args.dimension + args.dimension + args.dimension
 
         self.context_bilstm_after_coattention = PackedLSTM(dim, args.dimension,
-            batch_first=True, dropout=args.dropout_ratio, bidirectional=True, 
+            batch_first=True, dropout=dp(args), bidirectional=True, 
             num_layers=args.rnn_layers)
         self.self_attentive_encoder_context = TransformerEncoder(args.dimension, args.transformer_heads, args.transformer_hidden, args.transformer_layers, args.dropout_ratio)
         self.bilstm_context = PackedLSTM(args.dimension, args.dimension,
-            batch_first=True, dropout=args.dropout_ratio, bidirectional=True, 
+            batch_first=True, dropout=dp(args), bidirectional=True, 
             num_layers=args.rnn_layers)
 
         self.question_bilstm_after_coattention = PackedLSTM(dim, args.dimension,
-            batch_first=True, dropout=args.dropout_ratio, bidirectional=True, 
+            batch_first=True, dropout=dp(args), bidirectional=True, 
             num_layers=args.rnn_layers)
         self.self_attentive_encoder_question = TransformerEncoder(args.dimension, args.transformer_heads, args.transformer_hidden, args.transformer_layers, args.dropout_ratio)
         self.bilstm_question = PackedLSTM(args.dimension, args.dimension,
-            batch_first=True, dropout=args.dropout_ratio, bidirectional=True, 
+            batch_first=True, dropout=dp(args), bidirectional=True, 
             num_layers=args.rnn_layers)
 
         self.self_attentive_decoder = TransformerDecoder(args.dimension, args.transformer_heads, args.transformer_hidden, args.transformer_layers, args.dropout_ratio)
@@ -230,7 +232,7 @@ class CoattentiveLayer(nn.Module):
 
         question_sentinel = self.embed_sentinel(Variable(question.data.new(question.size(0)).long().fill_(1)))
         question = torch.cat([question_sentinel.unsqueeze(1), question], 1) # batch_size x (question_length + 1) x features
-        question = F.tanh(self.proj(question)) # batch_size x (question_length + 1) x features
+        question = torch.tanh(self.proj(question)) # batch_size x (question_length + 1) x features
 
         affinity = context.bmm(question.transpose(1,2)) # batch_size x (context_length + 1) x (question_length + 1)
         attn_over_context = self.normalize(affinity, context_padding) # batch_size x (context_length + 1) x 1
