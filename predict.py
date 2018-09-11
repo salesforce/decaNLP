@@ -247,7 +247,6 @@ def get_best(args):
 if __name__ == '__main__':
     args = get_args()
     print(f'Arguments:\n{pformat(vars(args))}')
-    os.environ['CUDA_VISIBLE_DEVICES'] = f'{args.gpus}'
 
     np.random.seed(args.seed)
     random.seed(args.seed)

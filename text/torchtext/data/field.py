@@ -3,7 +3,6 @@ from copy import deepcopy
 from collections import Counter, OrderedDict
 import six
 import torch
-from torch.autograd import Variable
 from tqdm import tqdm
 
 from .dataset import Dataset
@@ -201,7 +200,6 @@ class Field(RawField):
             tensor = torch.LongTensor(batch)
             if device != -1:
                 tensor = tensor.cuda(device)
-            tensor = Variable(tensor, volatile=not train)
         else:
             padded = self.pad(batch)
             tensor = self.numericalize(padded, device=device, train=train, **kwargs)
@@ -370,8 +368,8 @@ class Field(RawField):
 #            if self.include_lengths:
 #                lengths = lengths.cuda(device)
         if self.include_lengths:
-            return Variable(arr, volatile=not train), lengths, Variable(lim_arr, volatile=not train)
-        return Variable(arr, volatile=not train)
+            return arr, lengths, lim_arr
+        return arr
 
 
 class ReversibleField(Field):
