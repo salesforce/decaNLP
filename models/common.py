@@ -333,7 +333,7 @@ class Embedding(nn.Module):
         if self.project:
             self.projection = Feedforward(dimension, trained_dimension)
         dimension = trained_dimension
-        self.dropout = nn.Dropout(0.2)
+        self.dropout = nn.Dropout(dropout)
         self.dimension = dimension
 
     def forward(self, x, lengths=None):
