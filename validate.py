@@ -66,17 +66,18 @@ def print_results(keys, values, rank=None, num_print=1):
 
 
 def validate(task, val_iter, model, logger, field, world_size, rank, num_print=10, args=None):
-    model.eval()
-    required_names = ['greedy', 'answer']
-    optional_names = ['context', 'question']
-    loss, predictions, answers, results = gather_results(model, val_iter, field, world_size, optional_names=optional_names)
-    predictions = [p.replace('UNK', 'OOV') for p in predictions]
-    names = required_names + optional_names 
-    if hasattr(val_iter.dataset.examples[0], 'wikisql_id') or hasattr(val_iter.dataset.examples[0], 'squad_id') or hasattr(val_iter.dataset.examples[0], 'woz_id'):
-        answers = [val_iter.dataset.all_answers[sid] for sid in answers.tolist()]
-    metrics, answers = compute_metrics(predictions, answers, bleu='iwslt' in task or 'multi30k' in task, dialogue='woz' in task,
-        rouge='cnn' in task, logical_form='sql' in task, corpus_f1='zre' in task, args=args)
-    results = [predictions, answers] + results
-    print_results(names, results, rank=rank, num_print=num_print)
+    with torch.no_grad():
+        model.eval()
+        required_names = ['greedy', 'answer']
+        optional_names = ['context', 'question']
+        loss, predictions, answers, results = gather_results(model, val_iter, field, world_size, optional_names=optional_names)
+        predictions = [p.replace('UNK', 'OOV') for p in predictions]
+        names = required_names + optional_names 
+        if hasattr(val_iter.dataset.examples[0], 'wikisql_id') or hasattr(val_iter.dataset.examples[0], 'squad_id') or hasattr(val_iter.dataset.examples[0], 'woz_id'):
+            answers = [val_iter.dataset.all_answers[sid] for sid in answers.tolist()]
+        metrics, answers = compute_metrics(predictions, answers, bleu='iwslt' in task or 'multi30k' in task, dialogue='woz' in task,
+            rouge='cnn' in task, logical_form='sql' in task, corpus_f1='zre' in task, args=args)
+        results = [predictions, answers] + results
+        print_results(names, results, rank=rank, num_print=num_print)
 
-    return loss, metrics
+        return loss, metrics
