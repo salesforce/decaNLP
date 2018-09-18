@@ -156,14 +156,14 @@ class MultitaskQuestionAnsweringNetwork(nn.Module):
         effective_vocab_size = self.generative_vocab_size + len(oov_to_limited_idx)
         if self.generative_vocab_size < effective_vocab_size:
             size[-1] = effective_vocab_size - self.generative_vocab_size
-            buff = scaled_p_vocab.new_full(size, EPSILON, requires_grad=True)
+            buff = scaled_p_vocab.new_full(size, EPSILON)
             scaled_p_vocab = torch.cat([scaled_p_vocab, buff], dim=buff.dim()-1)
 
-        p_context_ptr = scaled_p_vocab.new_full(scaled_p_vocab.size(), EPSILON, requires_grad=True)
+        p_context_ptr = scaled_p_vocab.new_full(scaled_p_vocab.size(), EPSILON)
         p_context_ptr.scatter_add_(p_context_ptr.dim()-1, context_indices.unsqueeze(1).expand_as(context_attention), context_attention)
         scaled_p_context_ptr = (context_question_switches * (1 - vocab_pointer_switches)).expand_as(p_context_ptr) * p_context_ptr
 
-        p_question_ptr = scaled_p_vocab.new_full(scaled_p_vocab.size(), EPSILON, requires_grad=True)
+        p_question_ptr = scaled_p_vocab.new_full(scaled_p_vocab.size(), EPSILON)
         p_question_ptr.scatter_add_(p_question_ptr.dim()-1, question_indices.unsqueeze(1).expand_as(question_attention), question_attention)
         scaled_p_question_ptr = ((1 - context_question_switches) * (1 - vocab_pointer_switches)).expand_as(p_question_ptr) * p_question_ptr
 
@@ -204,8 +204,9 @@ class MultitaskQuestionAnsweringNetwork(nn.Module):
                     context_indices, question_indices, 
                     oov_to_limited_idx)
                 pred_probs, preds = probs.max(-1)
-                eos_yet = eos_yet | (preds.data == self.field.decoder_stoi['<eos>'])
-                outs[:, t] = preds.data.cpu().apply_(self.map_to_full)
+                preds = preds.squeeze(1)
+                eos_yet = eos_yet | (preds == self.field.decoder_stoi['<eos>'])
+                outs[:, t] = preds.cpu().apply_(self.map_to_full)
                 if eos_yet.all():
                     break
             return outs
