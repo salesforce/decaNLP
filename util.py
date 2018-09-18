@@ -68,20 +68,18 @@ def preprocess_examples(args, tasks, splits, field, logger=None, train=True):
 
 
 def set_seed(args, rank=None):
-    if rank is not None:
-        device = args.gpus[rank]
+    if rank is None and len(args.gpus) > 0:
+        ordinal = args.gpus[0]
     else:
-        if isinstance(args.gpus, list):
-            device = args.gpus[0]
-        else:
-            device = args.gpus
-    os.environ['CUDA_VISIBLE_DEVICES'] = f'{device}'
+        ordinal = args.gpus[rank] 
+    device = torch.device(f'cuda:{ordinal}' if ordinal > -1 else 'cpu')
     print(f'device: {device}')
-
     np.random.seed(args.seed)
     random.seed(args.seed)
     torch.manual_seed(args.seed)
-    torch.cuda.manual_seed(args.seed)
+    with torch.cuda.device(ordinal):
+        torch.cuda.manual_seed(args.seed)
+    return device
 
 
 def count_params(params):

@@ -336,8 +336,8 @@ class Embedding(nn.Module):
         self.dropout = nn.Dropout(0.2)
         self.dimension = dimension
 
-    def forward(self, x, lengths=None):
-        pretrained_embeddings = self.pretrained_embeddings[0](x.cpu()).cuda().detach()
+    def forward(self, x, lengths=None, device=-1):
+        pretrained_embeddings = self.pretrained_embeddings[0](x.cpu()).to(x.device).detach()
         return self.projection(pretrained_embeddings) if self.project else pretrained_embeddings
 
     def set_embeddings(self, w):
