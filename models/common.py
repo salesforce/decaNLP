@@ -387,3 +387,45 @@ class LSTMDecoderAttention(nn.Module):
         output = self.tanh(self.linear_out(combined_representation))
 
         return output, context_attention, context_alignment
+
+
+class CoattentiveLayer(nn.Module):
+
+    def __init__(self, d, dropout=0.2):
+        super().__init__()
+        self.proj = Feedforward(d, d, dropout=0.0)
+        self.embed_sentinel = nn.Embedding(2, d)
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, context, question, context_padding, question_padding): 
+        context_padding = torch.cat([context.new_zeros((context.size(0), 1), dtype=torch.long)==1, context_padding], 1)
+        question_padding = torch.cat([question.data.new_zeros((question.size(0), 1), dtype=torch.long)==1, question_padding], 1)
+
+        context_sentinel = self.embed_sentinel(context.new_zeros((context.size(0), 1), dtype=torch.long))
+        context = torch.cat([context_sentinel, self.dropout(context)], 1) # batch_size x (context_length + 1) x features
+
+        question_sentinel = self.embed_sentinel(question.new_ones((question.size(0), 1), dtype=torch.long))
+        question = torch.cat([question_sentinel, question], 1) # batch_size x (question_length + 1) x features
+        question = torch.tanh(self.proj(question)) # batch_size x (question_length + 1) x features
+
+        affinity = context.bmm(question.transpose(1,2)) # batch_size x (context_length + 1) x (question_length + 1)
+        attn_over_context = self.normalize(affinity, context_padding) # batch_size x (context_length + 1) x 1
+        attn_over_question = self.normalize(affinity.transpose(1,2), question_padding) # batch_size x (question_length + 1) x 1
+        sum_of_context = self.attn(attn_over_context, context) # batch_size x (question_length + 1) x features
+        sum_of_question = self.attn(attn_over_question, question) # batch_size x (context_length + 1) x features
+        coattn_context = self.attn(attn_over_question, sum_of_context) # batch_size x (context_length + 1) x features
+        coattn_question = self.attn(attn_over_context, sum_of_question) # batch_size x (question_length + 1) x features
+        return torch.cat([coattn_context, sum_of_question], 2)[:, 1:], torch.cat([coattn_question, sum_of_context], 2)[:, 1:]
+
+    @staticmethod
+    def attn(weights, candidates):
+        w1, w2, w3 = weights.size()
+        c1, c2, c3 = candidates.size()
+        return weights.unsqueeze(3).expand(w1, w2, w3, c3).mul(candidates.unsqueeze(2).expand(c1, c2, w3, c3)).sum(1).squeeze(1)
+
+    @staticmethod
+    def normalize(original, padding):
+        raw_scores = original.clone()
+        raw_scores.data.masked_fill_(padding.unsqueeze(-1).expand_as(raw_scores), -INF)
+        return F.softmax(raw_scores, dim=1)
+
