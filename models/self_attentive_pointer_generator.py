@@ -259,7 +259,7 @@ class DualPtrRNNDecoder(nn.Module):
     def make_init_output(self, context):
         batch_size = context.size(0)
         h_size = (batch_size, self.d_hid)
-        return Variable(context.data.new(*h_size).zero_(), requires_grad=False)
+        return context.new_zeros(h_size)
 
     def package_outputs(self, outputs):
         outputs = torch.stack(outputs, dim=1)
