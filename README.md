@@ -108,23 +108,23 @@ For test performance, please use the original [SQuAD](https://rajpurkar.github.i
 This model is the best MQAN trained on decaNLP so far. It was trained first on SQuAD and then on all of decaNLP. You can obtain this model and run it on the validation sets with the following.
 
 ```bash
-wget https://s3.amazonaws.com/research.metamind.io/decaNLP/pretrained/mqan_decanlp_qa_first.tar.gz
-tar -xvzf mqan_decanlp_qa_first.tar.gz
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/predict.py --evaluate validation --path /decaNLP/mqan_decanlp_qa_first --checkpoint_name model.pth --gpu 0"
+wget https://s3.amazonaws.com/research.metamind.io/decaNLP/pretrained/mqan_decanlp_qa_first_cpu.tar.gz
+tar -xvzf mqan_decanlp_qa_first_cpu.tar.gz
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/predict.py --evaluate validation --path /decaNLP/mqan_decanlp_qa_first_cpu --checkpoint_name iteration_1140000.pth --gpu 0"
 ```
 
 This model is the best MQAN trained on WikiSQL alone, which established [a new state-of-the-art performance by several points on that task](https://github.com/salesforce/WikiSQL): 73.2 / 75.4 / 81.4 (ordered test logical form accuracy, unordered test logical form accuracy, test execution accuracy).
 
 ```bash
-wget https://s3.amazonaws.com/research.metamind.io/decaNLP/pretrained/mqan_wikisql.tar.gz
-tar -xvzf mqan_wikisql.tar.gz
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/predict.py --evaluate validation --path /decaNLP/mqan_wikisql --checkpoint_name model.pth --gpu 0 --tasks wikisql"
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/predict.py --evaluate test --path /decaNLP/mqan_wikisql --checkpoint_name model.pth --gpu 0 --tasks wikisql"
-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/convert_to_logical_forms.py /decaNLP/.data/ /decaNLP/mqan_wikisql/model/validation/wikisql.txt /decaNLP/mqan_wikisql/model/validation/wikisql.ids.txt /decaNLP/mqan_wikisql/model/validation/wikisql_logical_forms.jsonl valid"
-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/convert_to_logical_forms.py /decaNLP/.data/ /decaNLP/mqan_wikisql/model/test/wikisql.txt /decaNLP/mqan_wikisql/model/test/wikisql.ids.txt /decaNLP/mqan_wikisql/model/test/wikisql_logical_forms.jsonl test"
+wget https://s3.amazonaws.com/research.metamind.io/decaNLP/pretrained/mqan_wikisql_cpu.tar.gz
+tar -xvzf mqan_wikisql_cpu.tar.gz
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/predict.py --evaluate validation --path /decaNLP/mqan_wikisql_cpu --checkpoint_name iteration_57000.pth --gpu 0 --tasks wikisql"
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/predict.py --evaluate test --path /decaNLP/mqan_wikisql_cpu --checkpoint_name iteration_57000.pth --gpu 0 --tasks wikisql"
+docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/convert_to_logical_forms.py /decaNLP/.data/ /decaNLP/mqan_wikisql_cpu/iteration_57000/validation/wikisql.txt /decaNLP/mqan_wikisql_cpu/iteration_57000/validation/wikisql.ids.txt /decaNLP/mqan_wikisql_cpu/iteration_57000/validation/wikisql_logical_forms.jsonl valid"
+docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/convert_to_logical_forms.py /decaNLP/.data/ /decaNLP/mqan_wikisql_cpu/iteration_57000/test/wikisql.txt /decaNLP/mqan_wikisql_cpu/iteration_57000/test/wikisql.ids.txt /decaNLP/mqan_wikisql_cpu/iteration_57000/test/wikisql_logical_forms.jsonl test"
 git clone https://github.com/salesforce/WikiSQL.git #git@github.com:salesforce/WikiSQL.git for ssh
-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/WikiSQL/evaluate.py /decaNLP/.data/wikisql/data/dev.jsonl /decaNLP/.data/wikisql/data/dev.db /decaNLP/mqan_wikisql/model/validation/wikisql_logical_forms.jsonl" # assumes that you have data stored in .data
-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/WikiSQL/evaluate.py /decaNLP/.data/wikisql/data/test.jsonl /decaNLP/.data/wikisql/data/test.db /decaNLP/mqan_wikisql/model/test/wikisql_logical_forms.jsonl" # assumes that you have data stored in .data
+docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/WikiSQL/evaluate.py /decaNLP/.data/wikisql/data/dev.jsonl /decaNLP/.data/wikisql/data/dev.db /decaNLP/mqan_wikisql_cpu/iteration_57000/validation/wikisql_logical_forms.jsonl" # assumes that you have data stored in .data
+docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/WikiSQL/evaluate.py /decaNLP/.data/wikisql/data/test.jsonl /decaNLP/.data/wikisql/data/test.db /decaNLP/mqan_wikisql_cpu/iteration_57000/test/wikisql_logical_forms.jsonl" # assumes that you have data stored in .data
 ```
 
 ## Inference on a Custom Dataset
@@ -137,13 +137,13 @@ touch .data/my_custom_dataset/val.jsonl
 echo '{"context": "The answer is answer.", "question": "What is the answer?", "answer": "answer"}' >> .data/my_custom_dataset/val.jsonl 
 # TODO add your own examples line by line to val.jsonl in the form of a JSON dictionary, as demonstrated above.
 # Make sure to delete the first line if you don't want the demonstrated example.
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/predict.py --evaluate valid --path /decaNLP/mqan_decanlp_qa_first --checkpoint_name model.pth --gpu 0 --tasks my_custom_dataset"
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/predict.py --evaluate valid --path /decaNLP/mqan_decanlp_qa_first_cpu --checkpoint_name iteration_1140000.pth --gpu 0 --tasks my_custom_dataset"
 ```
 You should get output that ends with something like this:
 ```
-**  /decaNLP/mqan_decanlp_qa_first/model/valid/my_custom_dataset.txt  already exists -- this is where predictions are stored **
-**  /decaNLP/mqan_decanlp_qa_first/model/valid/my_custom_dataset.gold.txt  already exists -- this is where ground truth answers are stored **
-**  /decaNLP/mqan_decanlp_qa_first/model/valid/my_custom_dataset.results.txt  already exists -- this is where metrics are stored **
+**  /decaNLP/mqan_decanlp_qa_first_cpu/iteration_1140000/valid/my_custom_dataset.txt  already exists -- this is where predictions are stored **
+**  /decaNLP/mqan_decanlp_qa_first_cpu/modeltion_1140000/valid/my_custom_dataset.gold.txt  already exists -- this is where ground truth answers are stored **
+**  /decaNLP/mqan_decanlp_qa_first_cpu/modeltion_1140000/valid/my_custom_dataset.results.txt  already exists -- this is where metrics are stored **
 {"em":0.0,"nf1":100.0,"nem":100.0}
 
 {'em': 0.0, 'nf1': 100.0, 'nem': 100.0}
