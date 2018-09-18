@@ -108,13 +108,13 @@ def prepare_data(args, field, logger):
     return FIELD, train_sets, val_sets
 
 
-def to_iter(args, world_size, val_batch_size, data, train=True, token_testing=False, sort=None):
+def to_iter(args, world_size, val_batch_size, data, device, train=True, token_testing=False, sort=None):
     sort = sort if not token_testing else True
     shuffle = None if not token_testing else False
     reverse = args.reverse
     Iterator = torchtext.data.BucketIterator if train else torchtext.data.Iterator
     it = Iterator(data, batch_size=val_batch_size, 
-       device=0 if world_size > 0 else -1, batch_size_fn=batch_fn if train else None, 
+       device=device, batch_size_fn=batch_fn if train else None, 
        distributed=world_size>1, train=train, repeat=train, sort=sort, 
        shuffle=shuffle, reverse=args.reverse)
     return it
@@ -205,7 +205,7 @@ def train(args, model, opt, train_iters, train_iterations, field, rank=0, world_
                             if world_size > 1:
                                 torch.distributed.barrier() 
                             if rank is not None and rank == 0:
-                                torch.save({'model_state_dict': model.state_dict(), 'field': field}, os.path.join(args.log_dir, f'iteration_{iteration}.pth'))
+                                torch.save({'model_state_dict': model.state_dict().cpu(), 'field': field}, os.path.join(args.log_dir, f'iteration_{iteration}.pth'))
                             if world_size > 1:
                                 torch.distributed.barrier() 
                             torch.save(opt.state_dict(), os.path.join(args.log_dir, f'iteration_{iteration}_rank_{rank}_optim.pth'))
@@ -275,22 +275,22 @@ def train(args, model, opt, train_iters, train_iterations, field, rank=0, world_
 
 
 def run(args, run_args, rank=0, world_size=1):
-    set_seed(args, rank=rank)
+    device = set_seed(args, rank=rank)
     logger = initialize_logger(args, rank)
     field, train_sets, val_sets, save_dict = run_args
 
     logger.start = time.time()
 
     logger.info(f'Preparing iterators')
-    train_iters = [(name, to_iter(args, world_size, tok, x, token_testing=args.token_testing)) 
+    train_iters = [(name, to_iter(args, world_size, tok, x, device, token_testing=args.token_testing)) 
                       for name, x, tok in zip(args.train_tasks, train_sets, args.train_batch_tokens)]
-    val_iters = [(name, to_iter(args, world_size, tok, x, train=False, token_testing=args.token_testing, sort=False if 'sql' in name else None))
+    val_iters = [(name, to_iter(args, world_size, tok, x, device, train=False, token_testing=args.token_testing, sort=False if 'sql' in name else None))
                     for name, x, tok in zip(args.val_tasks, val_sets, args.val_batch_size)]
 
     logger.info(f'Initializing Writer')
     writer = SummaryWriter(log_dir=args.log_dir)
 
-    model = init_model(args, field, logger, world_size)
+    model = init_model(args, field, logger, world_size, device)
     opt = init_opt(args, model) 
     start_iteration = 1
 
@@ -310,7 +310,7 @@ def run(args, run_args, rank=0, world_size=1):
         writer=writer if rank==0 else None, save_every=args.save_every, start_iteration=start_iteration)
 
 
-def init_model(args, field, logger, world_size):
+def init_model(args, field, logger, world_size, device):
     logger.info(f'Initializing {args.model}')
     Model = getattr(models, args.model) 
     model = Model(field, args)
@@ -318,8 +318,7 @@ def init_model(args, field, logger, world_size):
     num_param = count_params(params)
     logger.info(f'{args.model} has {num_param:,} parameters')
 
-    if args.gpus[0] > -1:
-        model.cuda()
+    model.to(device)
     if world_size > 1: 
         logger.info(f'Wrapping model for distributed')
         model = DistributedDataParallel(model)
