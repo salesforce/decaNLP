@@ -5,7 +5,6 @@ import numpy as np
 import torch
 from torch import nn
 from torch.nn import functional as F
-from torch.autograd import Variable
 
 from .common import positional_encodings_like, INF, EPSILON, TransformerEncoder, TransformerDecoder, PackedLSTM, LSTMDecoderAttention, LSTMDecoder, Embedding, Feedforward, mask
 
@@ -101,30 +100,28 @@ class PointerGenerator(nn.Module):
         effective_vocab_size = self.generative_vocab_size + len(oov_to_limited_idx)
         if self.generative_vocab_size < effective_vocab_size:
             size[-1] = effective_vocab_size - self.generative_vocab_size
-            buff = Variable(scaled_p_vocab.data.new(*size).fill_(EPSILON))
+            buff = scaled_p_vocab.new_full(size, EPSILON)
             scaled_p_vocab = torch.cat([scaled_p_vocab, buff], dim=buff.dim()-1)
 
-        p_context_ptr = Variable(scaled_p_vocab.data.new(*scaled_p_vocab.size()).fill_(EPSILON))
+        p_context_ptr = scaled_p_vocab.new_full(scaled_p_vocab.size(), EPSILON)
         p_context_ptr.scatter_add_(p_context_ptr.dim()-1, context_indices.unsqueeze(1).expand_as(context_attention), context_attention)
         scaled_p_context_ptr = (1 - vocab_pointer_switches).expand_as(p_context_ptr) * p_context_ptr
-
-        probs = scaled_p_vocab + scaled_p_context_ptr #+ scaled_p_question_ptr
+        probs = scaled_p_vocab + scaled_p_context_ptr
         return probs
 
 
     def greedy(self, context, context_indices, oov_to_limited_idx, rnn_state=None):
         B, TC, C = context.size()
         T = self.args.max_output_length
-        outs = Variable(context.data.new(B, T).long().fill_(
-            self.field.decoder_stoi['<pad>']), volatile=True)
+        outs = context.new_full((B, T), self.field.decoder_stoi['<pad>'], dtype=torch.long)
         eos_yet = context.data.new(B).byte().zero_()
 
         rnn_output, context_alignment = None, None
         for t in range(T):
             if t == 0:
-                embedding = self.decoder_embeddings(Variable(
-                    context[-1].data.new(B).long().fill_(
-                        self.field.vocab.stoi['<init>']), volatile=True).unsqueeze(1), [1]*B)
+                embedding = self.decoder_embeddings(
+                    self_attended_context[-1].new_full((B, 1), self.field.vocab.stoi['<init>'], dtype=torch.long), [1]*B)
+
             else:
                 embedding = self.decoder_embeddings(outs[:, t - 1].unsqueeze(1), [1]*B)
             decoder_outputs = self.dual_ptr_rnn_decoder(embedding, #hiddens[-1][:, t].unsqueeze(1),
@@ -138,8 +135,9 @@ class PointerGenerator(nn.Module):
                 context_indices, 
                 oov_to_limited_idx)
             pred_probs, preds = probs.max(-1)
-            eos_yet = eos_yet | (preds.data == self.field.decoder_stoi['<eos>'])
-            outs[:, t] = Variable(preds.data.cpu().apply_(self.map_to_full), volatile=True)
+            preds = preds.squeeze(1)
+            eos_yet = eos_yet | (preds == self.field.decoder_stoi['<eos>'])
+            outs[:, t] = preds.cpu().apply_(self.map_to_full)
             if eos_yet.all():
                 break
         return outs
