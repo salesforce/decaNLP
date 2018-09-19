@@ -205,7 +205,7 @@ def train(args, model, opt, train_iters, train_iterations, field, rank=0, world_
                             if world_size > 1:
                                 torch.distributed.barrier() 
                             if rank is not None and rank == 0:
-                                torch.save({'model_state_dict': model.state_dict().cpu(), 'field': field}, os.path.join(args.log_dir, f'iteration_{iteration}.pth'))
+                                torch.save({'model_state_dict': {k: v.cpu() for k, v in model.state_dict().items()}, 'field': field}, os.path.join(args.log_dir, f'iteration_{iteration}.pth'))
                             if world_size > 1:
                                 torch.distributed.barrier() 
                             torch.save(opt.state_dict(), os.path.join(args.log_dir, f'iteration_{iteration}_rank_{rank}_optim.pth'))
