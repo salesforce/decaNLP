@@ -184,7 +184,7 @@ def get_args():
                     'transformer_layers', 'rnn_layers', 'transformer_hidden', 
                     'dimension', 'load', 'max_val_context_length', 'val_batch_size', 
                     'transformer_heads', 'max_output_length', 'max_generative_vocab', 
-                    'lower', 'cove']
+                    'lower', 'cove', 'intermediate_cove']
         for r in retrieve:
             if r in config:
                 setattr(args, r,  config[r])
