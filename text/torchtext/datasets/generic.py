@@ -211,10 +211,10 @@ class SQuAD(CQA, data.Dataset):
         fields = [(x, field) for x in self.fields]
         cache_name = os.path.join(os.path.dirname(path), '.cache', os.path.basename(path), str(subsample))
 
-        examples, all_answers = [], []
+        examples, all_answers, q_ids = [], [], []
         if os.path.exists(cache_name):
             print(f'Loading cached data from {cache_name}')
-            examples, all_answers = torch.load(cache_name)
+            examples, all_answers, q_ids = torch.load(cache_name)
         else:
             with open(os.path.expanduser(path)) as f:
                 squad = json.load(f)['data']
@@ -226,6 +226,7 @@ class SQuAD(CQA, data.Dataset):
                         qas = paragraph['qas']
                         for qa in qas:
                             question = ' '.join(qa['question'].split())
+                            q_ids.append(qa['id'])
                             squad_id = len(all_answers)
                             context_question = get_context_question(context, question) 
                             if len(qa['answers']) == 0:
@@ -303,7 +304,7 @@ class SQuAD(CQA, data.Dataset):
 
             os.makedirs(os.path.dirname(cache_name), exist_ok=True)
             print(f'Caching data to {cache_name}')
-            torch.save((examples, all_answers), cache_name)
+            torch.save((examples, all_answers, q_ids), cache_name)
 
 
         FIELD = data.Field(batch_first=True, use_vocab=False, sequential=False, 
@@ -315,6 +316,7 @@ class SQuAD(CQA, data.Dataset):
 
         super(SQuAD, self).__init__(examples, fields, **kwargs)
         self.all_answers = all_answers
+        self.q_ids = q_ids
 
 
     @classmethod
