@@ -114,14 +114,13 @@ def run(args, field, val_sets, model):
                             wikisql_ids.append(wikisql_id)
                         prediction_file.write(pp + '\n')
                         predictions.append(pp) 
+                if 'sql' in task:
+                    with open(ids_file_name, 'w') as id_file:
+                        for i in wikisql_ids:
+                            id_file.write(json.dumps(i) + '\n')
         else:
             with open(prediction_file_name) as prediction_file:
                 predictions = [x.strip() for x in prediction_file.readlines()] 
-
-        if 'sql' in task:
-            with open(ids_file_name, 'w') as id_file:
-                for i in wikisql_ids:
-                    id_file.write(json.dumps(i) + '\n')
 
         def from_all_answers(an):
             return [it.dataset.all_answers[sid] for sid in an.tolist()] 
