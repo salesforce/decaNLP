@@ -352,7 +352,7 @@ def main():
     field, train_sets, val_sets = prepare_data(args, field, logger)
 
     run_args = (field, train_sets, val_sets, save_dict)
-    if len(args.gpus) > 1:
+    if len(args.devices) > 1:
         logger.info(f'Multiprocessing')
         mp = Multiprocess(run, args)
         mp.run(run_args)

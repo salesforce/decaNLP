@@ -35,26 +35,30 @@ You can run a command inside the docker image using
 nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) decanlp bash -c "COMMAND"
 ```
 
+## GPU vs. CPU
+
+The `devices` argument can be used to specify the devices for training. For CPU training, specify `--devices -1`; for GPU training, specify `--devices DEVICEID`. Note that Multi-GPU training is currently a WIP, so `--device` is sufficient for commands below. The default will be to train on GPU 0 as training on CPU will be quite time-consuming to train on all ten tasks in decaNLP.
+
 ## Training
 
-For example, to train a Multitask Question Answering Network (MQAN) on the Stanford Question Answering Dataset (SQuAD):
+For example, to train a Multitask Question Answering Network (MQAN) on the Stanford Question Answering Dataset (SQuAD) on GPU 0:
 ```bash
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) decanlp bash -c "python /decaNLP/train.py --train_tasks squad --gpu DEVICE_ID"
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 bash -c "python /decaNLP/train.py --train_tasks squad --device 0"
 ```
 
 To multitask with the fully joint, round-robin training described in the paper, you can add multiple tasks:
 ```bash
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) decanlp bash -c "python /decaNLP/train.py --train_tasks squad iwslt.en.de --train_iterations 1 --gpu DEVICE_ID"
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) decanlp bash -c "python /decaNLP/train.py --train_tasks squad iwslt.en.de --train_iterations 1 --device 0"
 ```
 
 To train on the entire Natural Language Decathlon:
 ```bash
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) decanlp bash -c "python /decaNLP/train.py --train_tasks squad iwslt.en.de cnn_dailymail multinli.in.out sst srl zre woz.en wikisql schema --train_iterations 1 --gpu DEVICE_ID"
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) decanlp bash -c "python /decaNLP/train.py --train_tasks squad iwslt.en.de cnn_dailymail multinli.in.out sst srl zre woz.en wikisql schema --train_iterations 1 --device 0"
 ```
 
 To pretrain on `n_jump_start=1` tasks for `jump_start=75000` iterations before switching to round-robin sampling of all tasks in the Natural Language Decathlon:
 ```bash
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) decanlp bash -c "python /decaNLP/train.py --n_jump_start 1 --jump_start 75000 --train_tasks squad iwslt.en.de cnn_dailymail multinli.in.out sst srl zre woz.en wikisql schema --train_iterations 1 --gpu DEVICE_ID"
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) decanlp bash -c "python /decaNLP/train.py --n_jump_start 1 --jump_start 75000 --train_tasks squad iwslt.en.de cnn_dailymail multinli.in.out sst srl zre woz.en wikisql schema --train_iterations 1 --device 0"
 ```
 This jump starting (or pretraining) on a subset of tasks can be done for any set of tasks, not only the entirety of decaNLP.
 
@@ -93,12 +97,12 @@ If you are having trouble with the specified port on either machine, run `lsof -
 You can evaluate a model for a specific task with `EVALUATION_TYPE` as `validation` or `test`:
 
 ```bash
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) decanlp bash -c "python /decaNLP/predict.py --evaluate EVALUATION_TYPE --path PATH_TO_CHECKPOINT_DIRECTORY --gpu DEVICE_ID --tasks squad"
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) decanlp bash -c "python /decaNLP/predict.py --evaluate EVALUATION_TYPE --path PATH_TO_CHECKPOINT_DIRECTORY --device 0 --tasks squad"
 ```
 
 or evaluate on the entire decathlon by removing any task specification:
 ```bash
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) decanlp bash -c "python /decaNLP/predict.py --evaluate EVALUATION_TYPE --path PATH_TO_CHECKPOINT_DIRECTORY --gpu DEVICE_ID"
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) decanlp bash -c "python /decaNLP/predict.py --evaluate EVALUATION_TYPE --path PATH_TO_CHECKPOINT_DIRECTORY --device 0"
 ```
 
 For test performance, please use the original [SQuAD](https://rajpurkar.github.io/SQuAD-explorer/), [MultiNLI](https://www.nyu.edu/projects/bowman/multinli/), and [WikiSQL](https://github.com/salesforce/WikiSQL) evaluation systems. For WikiSQL, there is a detailed walk-through of how to get test numbers in the section of this document concerning [pretrained models](https://github.com/salesforce/decaNLP#pretrained-models).
@@ -110,7 +114,7 @@ This model is the best MQAN trained on decaNLP so far. It was trained first on S
 ```bash
 wget https://s3.amazonaws.com/research.metamind.io/decaNLP/pretrained/mqan_decanlp_qa_first_cpu.tar.gz
 tar -xvzf mqan_decanlp_qa_first_cpu.tar.gz
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/predict.py --evaluate validation --path /decaNLP/mqan_decanlp_qa_first_cpu --checkpoint_name iteration_1140000.pth --gpu 0"
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/predict.py --evaluate validation --path /decaNLP/mqan_decanlp_qa_first_cpu --checkpoint_name iteration_1140000.pth --device 0"
 ```
 
 This model is the best MQAN trained on WikiSQL alone, which established [a new state-of-the-art performance by several points on that task](https://github.com/salesforce/WikiSQL): 73.2 / 75.4 / 81.4 (ordered test logical form accuracy, unordered test logical form accuracy, test execution accuracy).
@@ -118,8 +122,8 @@ This model is the best MQAN trained on WikiSQL alone, which established [a new s
 ```bash
 wget https://s3.amazonaws.com/research.metamind.io/decaNLP/pretrained/mqan_wikisql_cpu.tar.gz
 tar -xvzf mqan_wikisql_cpu.tar.gz
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/predict.py --evaluate validation --path /decaNLP/mqan_wikisql_cpu --checkpoint_name iteration_57000.pth --gpu 0 --tasks wikisql"
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/predict.py --evaluate test --path /decaNLP/mqan_wikisql_cpu --checkpoint_name iteration_57000.pth --gpu 0 --tasks wikisql"
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/predict.py --evaluate validation --path /decaNLP/mqan_wikisql_cpu --checkpoint_name iteration_57000.pth --device 0 --tasks wikisql"
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/predict.py --evaluate test --path /decaNLP/mqan_wikisql_cpu --checkpoint_name iteration_57000.pth --device 0 --tasks wikisql"
 docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/convert_to_logical_forms.py /decaNLP/.data/ /decaNLP/mqan_wikisql_cpu/iteration_57000/validation/wikisql.txt /decaNLP/mqan_wikisql_cpu/iteration_57000/validation/wikisql.ids.txt /decaNLP/mqan_wikisql_cpu/iteration_57000/validation/wikisql_logical_forms.jsonl valid"
 docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/convert_to_logical_forms.py /decaNLP/.data/ /decaNLP/mqan_wikisql_cpu/iteration_57000/test/wikisql.txt /decaNLP/mqan_wikisql_cpu/iteration_57000/test/wikisql.ids.txt /decaNLP/mqan_wikisql_cpu/iteration_57000/test/wikisql_logical_forms.jsonl test"
 git clone https://github.com/salesforce/WikiSQL.git #git@github.com:salesforce/WikiSQL.git for ssh
@@ -137,7 +141,7 @@ touch .data/my_custom_dataset/val.jsonl
 echo '{"context": "The answer is answer.", "question": "What is the answer?", "answer": "answer"}' >> .data/my_custom_dataset/val.jsonl 
 # TODO add your own examples line by line to val.jsonl in the form of a JSON dictionary, as demonstrated above.
 # Make sure to delete the first line if you don't want the demonstrated example.
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/predict.py --evaluate valid --path /decaNLP/mqan_decanlp_qa_first_cpu --checkpoint_name iteration_1140000.pth --gpu 0 --tasks my_custom_dataset"
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/  decanlp bash -c "python /decaNLP/predict.py --evaluate valid --path /decaNLP/mqan_decanlp_qa_first_cpu --checkpoint_name iteration_1140000.pth --tasks my_custom_dataset"
 ```
 You should get output that ends with something like this:
 ```
