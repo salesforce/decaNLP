@@ -180,8 +180,8 @@ def train(args, model, opt, train_iters, train_iterations, field, rank=0, world_
                         for val_task_idx, (val_task, val_iter) in enumerate(val_iters):
                             val_loss, metric_dict = validate(val_task, val_iter, model, logger, field, world_size, rank, num_print=args.num_print, args=args)
                             if val_loss is not None:
-                                log_entry = f'{args.timestamp}:{elapsed_time(logger)}:iteration_{iteration}:{round_progress}train_{task}:{task_progress}val_{val_task}:val_loss{val_loss.data[0]:.4f}:'
-                                writer.add_scalars(f'loss/val', {val_task: val_loss.data[0]}, iteration)
+                                log_entry = f'{args.timestamp}:{elapsed_time(logger)}:iteration_{iteration}:{round_progress}train_{task}:{task_progress}val_{val_task}:val_loss{val_loss.item():.4f}:'
+                                writer.add_scalars(f'loss/val', {val_task: val_loss.item()}, iteration)
                             else:
                                 log_entry = f'{args.timestamp}:{elapsed_time(logger)}:iteration_{iteration}:{round_progress}train_{task}:{task_progress}val_{val_task}:'
                                
