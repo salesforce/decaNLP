@@ -73,7 +73,7 @@ def parse():
     parser.add_argument('--resume', action='store_true', help='whether to resume training with past optimizers')
 
     parser.add_argument('--seed', default=123, type=int, help='Random seed.')
-    parser.add_argument('--gpus', default=[0], nargs='+', type=int, help='a list of gpus that can be used for training (multi-gpu currently WIP)')
+    parser.add_argument('--devices', default=[0], nargs='+', type=int, help='a list of devices that can be used for training (multi-gpu currently WIP)')
     parser.add_argument('--backend', default='gloo', type=str, help='backend for distributed training')
 
     parser.add_argument('--no_commit', action='store_false', dest='commit', help='do not track the git commit associated with this training run') 
@@ -88,7 +88,7 @@ def parse():
         args.val_tasks = deepcopy(args.train_tasks)
     if 'imdb' in args.val_tasks:
         args.val_tasks.remove('imdb')
-    args.world_size = len(args.gpus) if args.gpus[0] > -1 else -1
+    args.world_size = len(args.devices) if args.devices[0] > -1 else -1
     if args.world_size > 1:
         print('multi-gpu training is currently a work in progress')
         return

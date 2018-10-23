@@ -175,7 +175,7 @@ def get_args():
     parser.add_argument('--path', required=True)
     parser.add_argument('--evaluate', type=str, required=True)
     parser.add_argument('--tasks', default=['squad', 'iwslt.en.de', 'cnn_dailymail', 'multinli.in.out', 'sst', 'srl', 'zre', 'woz.en', 'wikisql', 'schema'], nargs='+')
-    parser.add_argument('--gpus', default=[0], nargs='+', type=int, help='a list of gpus that can be used (multi-gpu currently WIP)')
+    parser.add_argument('--devices', default=[0], nargs='+', type=int, help='a list of devices that can be used (multi-gpu currently WIP)')
     parser.add_argument('--seed', default=123, type=int, help='Random seed.')
     parser.add_argument('--data', default='/decaNLP/.data/', type=str, help='where to load data from.')
     parser.add_argument('--embeddings', default='/decaNLP/.embeddings', type=str, help='where to save embeddings.')
