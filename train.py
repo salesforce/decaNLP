@@ -200,17 +200,17 @@ def train(args, model, opt, train_iters, train_iterations, field, rank=0, world_
                                     writer.add_scalars(f'{val_task}/{metric_key}', {'val': metric_value}, iteration)
                                     writer.add_scalars(f'{val_task}/val', {f'{metric_key}': metric_value}, iteration)
 
-                        # saving
-                        if save_every is not None and (iteration % args.save_every == 0 % args.save_every):
-                            if world_size > 1:
-                                torch.distributed.barrier() 
-                            if rank is not None and rank == 0:
-                                torch.save({'model_state_dict': {k: v.cpu() for k, v in model.state_dict().items()}, 'field': field}, os.path.join(args.log_dir, f'iteration_{iteration}.pth'))
-                            if world_size > 1:
-                                torch.distributed.barrier() 
-                            torch.save(opt.state_dict(), os.path.join(args.log_dir, f'iteration_{iteration}_rank_{rank}_optim.pth'))
-                            if world_size > 1:
-                                torch.distributed.barrier() 
+                    # saving
+                    if save_every is not None and (iteration % args.save_every == 0 % args.save_every):
+                        if world_size > 1:
+                            torch.distributed.barrier() 
+                        if rank is not None and rank == 0:
+                            torch.save({'model_state_dict': {k: v.cpu() for k, v in model.state_dict().items()}, 'field': field}, os.path.join(args.log_dir, f'iteration_{iteration}.pth'))
+                        if world_size > 1:
+                            torch.distributed.barrier() 
+                        torch.save(opt.state_dict(), os.path.join(args.log_dir, f'iteration_{iteration}_rank_{rank}_optim.pth'))
+                        if world_size > 1:
+                            torch.distributed.barrier() 
 
                     # lr update
                     lr = opt.param_groups[0]['lr'] 
@@ -287,8 +287,11 @@ def run(args, run_args, rank=0, world_size=1):
     val_iters = [(name, to_iter(args, world_size, tok, x, device, train=False, token_testing=args.token_testing, sort=False if 'sql' in name else None))
                     for name, x, tok in zip(args.val_tasks, val_sets, args.val_batch_size)]
 
-    logger.info(f'Initializing Writer')
-    writer = SummaryWriter(log_dir=args.log_dir)
+    if hasattr(args, 'tensorboard') and args.tensorboard:
+        logger.info(f'Initializing Writer')
+        writer = SummaryWriter(log_dir=args.log_dir)
+    else:
+        writer = None
 
     model = init_model(args, field, logger, world_size, device)
     opt = init_opt(args, model) 
