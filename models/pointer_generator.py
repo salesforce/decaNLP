@@ -120,7 +120,7 @@ class PointerGenerator(nn.Module):
         for t in range(T):
             if t == 0:
                 embedding = self.decoder_embeddings(
-                    self_attended_context[-1].new_full((B, 1), self.field.vocab.stoi['<init>'], dtype=torch.long), [1]*B)
+                    context[-1].new_full((B, 1), self.field.vocab.stoi['<init>'], dtype=torch.long), [1]*B)
 
             else:
                 embedding = self.decoder_embeddings(outs[:, t - 1].unsqueeze(1), [1]*B)
