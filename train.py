@@ -319,7 +319,7 @@ def init_model(args, field, logger, world_size, device):
     model = Model(field, args)
     params = get_trainable_params(model) 
     num_param = count_params(params)
-    logger.info(f'{args.model} has {num_param:,} parameters')
+    logger.info(f'{args.model} has {num_param:,} trainable parameters')
 
     model.to(device)
     if world_size > 1: 

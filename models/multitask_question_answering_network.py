@@ -6,6 +6,8 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
+from util import get_trainable_params
+
 from cove import MTLSTM
 from allennlp.modules.elmo import Elmo
 options_file = "https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_options.json"
@@ -32,6 +34,9 @@ class MultitaskQuestionAnsweringNetwork(nn.Module):
 
         if self.args.cove or self.args.intermediate_cove:
             self.cove = MTLSTM(model_cache=args.embeddings, layer0=args.intermediate_cove, layer1=args.cove)
+            cove_params = get_trainable_params(self.cove) 
+            for p in cove_params:
+                p.requires_grad = False
             cove_dim = int(args.intermediate_cove) * 600 + int(args.cove) * 600 + 400 # the last 400 is for GloVe and char n-gram embeddings
             self.project_cove = Feedforward(cove_dim, args.dimension)
      
@@ -159,16 +164,15 @@ class MultitaskQuestionAnsweringNetwork(nn.Module):
             buff = scaled_p_vocab.new_full(size, EPSILON)
             scaled_p_vocab = torch.cat([scaled_p_vocab, buff], dim=buff.dim()-1)
 
-        p_context_ptr = scaled_p_vocab.new_full(scaled_p_vocab.size(), EPSILON)
-        p_context_ptr.scatter_add_(p_context_ptr.dim()-1, context_indices.unsqueeze(1).expand_as(context_attention), context_attention)
-        scaled_p_context_ptr = (context_question_switches * (1 - vocab_pointer_switches)).expand_as(p_context_ptr) * p_context_ptr
+        # p_context_ptr
+        scaled_p_vocab.scatter_add_(scaled_p_vocab.dim()-1, context_indices.unsqueeze(1).expand_as(context_attention), 
+            (context_question_switches * (1 - vocab_pointer_switches)).expand_as(context_attention) * context_attention)
 
-        p_question_ptr = scaled_p_vocab.new_full(scaled_p_vocab.size(), EPSILON)
-        p_question_ptr.scatter_add_(p_question_ptr.dim()-1, question_indices.unsqueeze(1).expand_as(question_attention), question_attention)
-        scaled_p_question_ptr = ((1 - context_question_switches) * (1 - vocab_pointer_switches)).expand_as(p_question_ptr) * p_question_ptr
+        # p_question_ptr
+        scaled_p_vocab.scatter_add_(scaled_p_vocab.dim()-1, question_indices.unsqueeze(1).expand_as(question_attention), 
+            ((1 - context_question_switches) * (1 - vocab_pointer_switches)).expand_as(question_attention) * question_attention)
 
-        probs = scaled_p_vocab + scaled_p_context_ptr + scaled_p_question_ptr
-        return probs
+        return scaled_p_vocab
 
 
     def greedy(self, self_attended_context, context, question, context_indices, question_indices, oov_to_limited_idx, rnn_state=None):
