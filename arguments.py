@@ -31,7 +31,7 @@ def parse():
 
     parser.add_argument('--train_tasks', nargs='+', type=str, help='tasks to use for training', required=True)
     parser.add_argument('--train_iterations', nargs='+', type=int, help='number of iterations to focus on each task')
-    parser.add_argument('--train_batch_tokens', nargs='+', default=[10000], type=int, help='Number of tokens to use for dynamic batching, corresponging to tasks in train tasks')
+    parser.add_argument('--train_batch_tokens', nargs='+', default=[9000], type=int, help='Number of tokens to use for dynamic batching, corresponging to tasks in train tasks')
     parser.add_argument('--jump_start', default=0, type=int, help='number of iterations to give jump started tasks')
     parser.add_argument('--n_jump_start', default=0, type=int, help='how many tasks to jump start (presented in order)')    
     parser.add_argument('--num_print', default=15, type=int, help='how many validation examples with greedy output to print to std out')
