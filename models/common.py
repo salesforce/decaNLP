@@ -76,7 +76,7 @@ def pad_to_match(x, y):
     x_len, y_len = x.size(1), y.size(1)
     if x_len == y_len:
         return x, y
-    extra = x.data.new(x.size(0), abs(y_len - x_len)).fill_(1)
+    extra = x.new_ones((x.size(0), abs(y_len - x_len)))
     if x_len < y_len:
         return torch.cat((x, extra), 1), y
     return x, torch.cat((y, extra), 1)
@@ -119,10 +119,10 @@ class Attention(nn.Module):
     def forward(self, query, key, value, padding=None):
         dot_products = matmul(query, key.transpose(1, 2))
         if query.dim() == 3 and self.causal:
-            tri = key.data.new(key.size(1), key.size(1)).fill_(1).triu(1) * INF
-            dot_products.data.sub_(tri.unsqueeze(0))
+            tri = key.new_ones((key.size(1), key.size(1))).triu(1) * INF
+            dot_products.sub_(tri.unsqueeze(0))
         if not padding is None:
-            dot_products.data.masked_fill_(padding.unsqueeze(1).expand_as(dot_products), -INF)
+            dot_products.masked_fill_(padding.unsqueeze(1).expand_as(dot_products), -INF)
         return matmul(self.dropout(F.softmax(dot_products / self.scale, dim=-1)), value)
 
 
@@ -241,7 +241,7 @@ class Highway(torch.nn.Module):
         self.d_in = d_in
         self._layers = torch.nn.ModuleList([Linear(d_in, 2 * d_in) for _ in range(n_layers)])
         for layer in self._layers:
-            layer.bias[d_in:].data.fill_(1)
+            layer.bias[d_in:].fill_(1)
         self.activation = getattr(F, activation)
 
     def forward(self, inputs):
@@ -284,7 +284,7 @@ class PackedLSTM(nn.Module):
         self.batch_first = batch_first
 
     def forward(self, inputs, lengths, hidden=None):
-        lens, indices = torch.sort(inputs.data.new(lengths).long(), 0, True)
+        lens, indices = torch.sort(inputs.new_tensor(lengths, dtype=torch.long), 0, True)
         inputs = inputs[indices] if self.batch_first else inputs[:, indices] 
         outputs, (h, c) = self.rnn(pack(inputs, lens.tolist(), 
             batch_first=self.batch_first), hidden)
@@ -342,6 +342,7 @@ class Embedding(nn.Module):
 
     def set_embeddings(self, w):
         self.pretrained_embeddings[0].weight.data = w
+        self.pretrained_embeddings[0].weight.requires_grad = False
 
 
 class SemanticFusionUnit(nn.Module):
@@ -379,7 +380,7 @@ class LSTMDecoderAttention(nn.Module):
             targetT = input.unsqueeze(2)
 
         context_scores = torch.bmm(context, targetT).squeeze(2)
-        context_scores.data.masked_fill_(self.context_mask, -float('inf'))
+        context_scores.masked_fill_(self.context_mask, -float('inf'))
         context_attention = F.softmax(context_scores, dim=-1) + EPSILON
         context_alignment = torch.bmm(context_attention.unsqueeze(1), context).squeeze(1)
 
@@ -399,7 +400,7 @@ class CoattentiveLayer(nn.Module):
 
     def forward(self, context, question, context_padding, question_padding): 
         context_padding = torch.cat([context.new_zeros((context.size(0), 1), dtype=torch.long)==1, context_padding], 1)
-        question_padding = torch.cat([question.data.new_zeros((question.size(0), 1), dtype=torch.long)==1, question_padding], 1)
+        question_padding = torch.cat([question.new_zeros((question.size(0), 1), dtype=torch.long)==1, question_padding], 1)
 
         context_sentinel = self.embed_sentinel(context.new_zeros((context.size(0), 1), dtype=torch.long))
         context = torch.cat([context_sentinel, self.dropout(context)], 1) # batch_size x (context_length + 1) x features
@@ -426,6 +427,6 @@ class CoattentiveLayer(nn.Module):
     @staticmethod
     def normalize(original, padding):
         raw_scores = original.clone()
-        raw_scores.data.masked_fill_(padding.unsqueeze(-1).expand_as(raw_scores), -INF)
+        raw_scores.masked_fill_(padding.unsqueeze(-1).expand_as(raw_scores), -INF)
         return F.softmax(raw_scores, dim=1)
 
