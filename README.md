@@ -18,31 +18,33 @@ While the research direction associated with this repository focused on multitas
 
 ## Getting Started
 
-First, make sure you have [docker](https://www.docker.com/get-docker) and [nvidia-docker](https://github.com/NVIDIA/nvidia-docker) installed. Then build the docker image:
-
-```bash
-cd dockerfiles && docker build -t decanlp . && cd -
-```
-
-You will also need to make a `.data` directory and move the examples for the Winograd Schemas into it:
+First, you will need to make a `.data` directory and move the examples for the Winograd Schemas into it:
 ```bash
 mkdir -p .data/schema
 cp local_data/schema.txt .data/schema/
 ```
 
-You can run a command inside the docker image using 
-```bash
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 -c "COMMAND"
-```
-
-## GPU vs. CPU
+### GPU vs. CPU
 
 The `devices` argument can be used to specify the devices for training. For CPU training, specify `--devices -1`; for GPU training, specify `--devices DEVICEID`. Note that Multi-GPU training is currently a WIP, so `--device` is sufficient for commands below. The default will be to train on GPU 0 as training on CPU will be quite time-consuming to train on all ten tasks in decaNLP.
 
-If you want to use CPU, then remove the `cuda9_` prefix from commands below. This will allow you to use Docker without CUDA.
+If you want to use CPU, then remove the `nvidia-` and the `cuda9_` prefixes from the default commands listed in sections below. This will allow you to use Docker without CUDA.
 
-## PyTorch Version
-The research associated with the original paper was done using Pytorch 0.3, but we have since migrated to 0.4. If you want to replicate results from the paper, then to be safe, you should use the code at a commit on or before 203a02e2326de65400a8d3dce63fdb0f4ae0c324. You should also replace `toch041` with `torch03` in the commands below to access a Docker image with the older version of PyTorch.
+For example, if you have CUDA and all the necessary drivers and GPUs, you you can run a command inside the CUDA Docker image using:
+```bash
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 -c "COMMAND --device 0"
+```
+
+If you want to run the same command without CUDA:
+```bash
+docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:torch041 -c "COMMAND --device -1"
+```
+
+For those in the Docker know, you can look at the Dockerfiles used to build these two images in `dockerfiles/`.
+
+
+### PyTorch Version
+The research associated with the original paper was done using Pytorch 0.3, but we have since migrated to 0.4. If you want to replicate results from the paper, then to be safe, you should use the code at a commit on or before 3c4f94b88768f4c3efc2fd4f015fed2f5453ebce. You should also replace `toch041` with `torch03` in the commands below to access a Docker image with the older version of PyTorch.
 
 ## Training
 
@@ -69,7 +71,9 @@ This jump starting (or pretraining) on a subset of tasks can be done for any set
 
 ### Tensorboard
 
-If you would like to make use of tensorboard, run (typically in a `tmux` pane or equivalent):
+If you would like to make use of tensorboard, you can add the `--tensorboard` flag to your training runs. This will log things in the format that Tensorboard expects.
+
+To read those files and run the Tensorboard server, run (typically in a `tmux` pane or equivalent so that the process is not killed when you shut your laptop) the following command:
 
 ```bash
 docker run -it --rm -p 0.0.0.0:6006:6006 -v `pwd`:/decaNLP/ bmccann/decanlp:cuda9_torch041 -c "tensorboard --logdir /decaNLP/results"
