@@ -32,12 +32,12 @@ If you want to use CPU, then remove the `nvidia-` and the `cuda9_` prefixes from
 
 For example, if you have CUDA and all the necessary drivers and GPUs, you you can run a command inside the CUDA Docker image using:
 ```bash
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 -c "COMMAND --device 0"
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 bash -c "COMMAND --device 0"
 ```
 
 If you want to run the same command without CUDA:
 ```bash
-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:torch041 -c "COMMAND --device -1"
+docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 bash -c "COMMAND --device -1"
 ```
 
 For those in the Docker know, you can look at the Dockerfiles used to build these two images in `dockerfiles/`.
@@ -55,17 +55,17 @@ nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decan
 
 To multitask with the fully joint, round-robin training described in the paper, you can add multiple tasks:
 ```bash
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 -c "python /decaNLP/train.py --train_tasks squad iwslt.en.de --train_iterations 1 --device 0"
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 bash -c "python /decaNLP/train.py --train_tasks squad iwslt.en.de --train_iterations 1 --device 0"
 ```
 
 To train on the entire Natural Language Decathlon:
 ```bash
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 -c "python /decaNLP/train.py --train_tasks squad iwslt.en.de cnn_dailymail multinli.in.out sst srl zre woz.en wikisql schema --train_iterations 1 --device 0"
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 bash -c "python /decaNLP/train.py --train_tasks squad iwslt.en.de cnn_dailymail multinli.in.out sst srl zre woz.en wikisql schema --train_iterations 1 --device 0"
 ```
 
 To pretrain on `n_jump_start=1` tasks for `jump_start=75000` iterations before switching to round-robin sampling of all tasks in the Natural Language Decathlon:
 ```bash
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 -c "python /decaNLP/train.py --n_jump_start 1 --jump_start 75000 --train_tasks squad iwslt.en.de cnn_dailymail multinli.in.out sst srl zre woz.en wikisql schema --train_iterations 1 --device 0"
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 bash -c "python /decaNLP/train.py --n_jump_start 1 --jump_start 75000 --train_tasks squad iwslt.en.de cnn_dailymail multinli.in.out sst srl zre woz.en wikisql schema --train_iterations 1 --device 0"
 ```
 This jump starting (or pretraining) on a subset of tasks can be done for any set of tasks, not only the entirety of decaNLP.
 
@@ -76,7 +76,7 @@ If you would like to make use of tensorboard, you can add the `--tensorboard` fl
 To read those files and run the Tensorboard server, run (typically in a `tmux` pane or equivalent so that the process is not killed when you shut your laptop) the following command:
 
 ```bash
-docker run -it --rm -p 0.0.0.0:6006:6006 -v `pwd`:/decaNLP/ bmccann/decanlp:cuda9_torch041 -c "tensorboard --logdir /decaNLP/results"
+docker run -it --rm -p 0.0.0.0:6006:6006 -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 bash -c "tensorboard --logdir /decaNLP/results"
 ```
 
 If you are running the server on a remote machine, you can run the following on your local machine to forward to http://localhost:6006/:
@@ -106,12 +106,12 @@ If you are having trouble with the specified port on either machine, run `lsof -
 You can evaluate a model for a specific task with `EVALUATION_TYPE` as `validation` or `test`:
 
 ```bash
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 -c "python /decaNLP/predict.py --evaluate EVALUATION_TYPE --path PATH_TO_CHECKPOINT_DIRECTORY --device 0 --tasks squad"
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 bash -c "python /decaNLP/predict.py --evaluate EVALUATION_TYPE --path PATH_TO_CHECKPOINT_DIRECTORY --device 0 --tasks squad"
 ```
 
 or evaluate on the entire decathlon by removing any task specification:
 ```bash
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 -c "python /decaNLP/predict.py --evaluate EVALUATION_TYPE --path PATH_TO_CHECKPOINT_DIRECTORY --device 0"
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 bash -c "python /decaNLP/predict.py --evaluate EVALUATION_TYPE --path PATH_TO_CHECKPOINT_DIRECTORY --device 0"
 ```
 
 For test performance, please use the original [SQuAD](https://rajpurkar.github.io/SQuAD-explorer/), [MultiNLI](https://www.nyu.edu/projects/bowman/multinli/), and [WikiSQL](https://github.com/salesforce/WikiSQL) evaluation systems. For WikiSQL, there is a detailed walk-through of how to get test numbers in the section of this document concerning [pretrained models](https://github.com/salesforce/decaNLP#pretrained-models).
@@ -123,7 +123,7 @@ This model is the best MQAN trained on decaNLP so far. It was trained first on S
 ```bash
 wget https://s3.amazonaws.com/research.metamind.io/decaNLP/pretrained/mqan_decanlp_qa_first_cpu.tar.gz
 tar -xvzf mqan_decanlp_qa_first_cpu.tar.gz
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/  bmccann/decanlp:cuda9_torch041 -c "python /decaNLP/predict.py --evaluate validation --path /decaNLP/mqan_decanlp_qa_first_cpu --checkpoint_name iteration_1140000.pth --device 0"
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 bash -c "python /decaNLP/predict.py --evaluate validation --path /decaNLP/mqan_decanlp_qa_first_cpu --checkpoint_name iteration_1140000.pth --device 0"
 ```
 
 This model is the best MQAN trained on WikiSQL alone, which established [a new state-of-the-art performance by several points on that task](https://github.com/salesforce/WikiSQL): 73.2 / 75.4 / 81.4 (ordered test logical form accuracy, unordered test logical form accuracy, test execution accuracy).
@@ -132,12 +132,12 @@ This model is the best MQAN trained on WikiSQL alone, which established [a new s
 wget https://s3.amazonaws.com/research.metamind.io/decaNLP/pretrained/mqan_wikisql_cpu.tar.gz
 tar -xvzf mqan_wikisql_cpu.tar.gz
 nvidia-docker run -it --rm -v `pwd`:/decaNLP/  bmccann/decanlp:cuda9_torch041 -c "python /decaNLP/predict.py --evaluate validation --path /decaNLP/mqan_wikisql_cpu --checkpoint_name iteration_57000.pth --device 0 --tasks wikisql"
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/  bmccann/decanlp:cuda9_torch041 -c "python /decaNLP/predict.py --evaluate test --path /decaNLP/mqan_wikisql_cpu --checkpoint_name iteration_57000.pth --device 0 --tasks wikisql"
-docker run -it --rm -v `pwd`:/decaNLP/  bmccann/decanlp:cuda9_torch041 -c "python /decaNLP/convert_to_logical_forms.py /decaNLP/.data/ /decaNLP/mqan_wikisql_cpu/iteration_57000/validation/wikisql.txt /decaNLP/mqan_wikisql_cpu/iteration_57000/validation/wikisql.ids.txt /decaNLP/mqan_wikisql_cpu/iteration_57000/validation/wikisql_logical_forms.jsonl valid"
-docker run -it --rm -v `pwd`:/decaNLP/  bmccann/decanlp:cuda9_torch041 -c "python /decaNLP/convert_to_logical_forms.py /decaNLP/.data/ /decaNLP/mqan_wikisql_cpu/iteration_57000/test/wikisql.txt /decaNLP/mqan_wikisql_cpu/iteration_57000/test/wikisql.ids.txt /decaNLP/mqan_wikisql_cpu/iteration_57000/test/wikisql_logical_forms.jsonl test"
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 bash -c "python /decaNLP/predict.py --evaluate test --path /decaNLP/mqan_wikisql_cpu --checkpoint_name iteration_57000.pth --device 0 --tasks wikisql"
+docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 bash -c "python /decaNLP/convert_to_logical_forms.py /decaNLP/.data/ /decaNLP/mqan_wikisql_cpu/iteration_57000/validation/wikisql.txt /decaNLP/mqan_wikisql_cpu/iteration_57000/validation/wikisql.ids.txt /decaNLP/mqan_wikisql_cpu/iteration_57000/validation/wikisql_logical_forms.jsonl valid"
+docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 bash -c "python /decaNLP/convert_to_logical_forms.py /decaNLP/.data/ /decaNLP/mqan_wikisql_cpu/iteration_57000/test/wikisql.txt /decaNLP/mqan_wikisql_cpu/iteration_57000/test/wikisql.ids.txt /decaNLP/mqan_wikisql_cpu/iteration_57000/test/wikisql_logical_forms.jsonl test"
 git clone https://github.com/salesforce/WikiSQL.git #git@github.com:salesforce/WikiSQL.git for ssh
-docker run -it --rm -v `pwd`:/decaNLP/  bmccann/decanlp:cuda9_torch041 -c "python /decaNLP/WikiSQL/evaluate.py /decaNLP/.data/wikisql/data/dev.jsonl /decaNLP/.data/wikisql/data/dev.db /decaNLP/mqan_wikisql_cpu/iteration_57000/validation/wikisql_logical_forms.jsonl" # assumes that you have data stored in .data
-docker run -it --rm -v `pwd`:/decaNLP/  bmccann/decanlp:cuda9_torch041 -c "python /decaNLP/WikiSQL/evaluate.py /decaNLP/.data/wikisql/data/test.jsonl /decaNLP/.data/wikisql/data/test.db /decaNLP/mqan_wikisql_cpu/iteration_57000/test/wikisql_logical_forms.jsonl" # assumes that you have data stored in .data
+docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 bash -c "python /decaNLP/WikiSQL/evaluate.py /decaNLP/.data/wikisql/data/dev.jsonl /decaNLP/.data/wikisql/data/dev.db /decaNLP/mqan_wikisql_cpu/iteration_57000/validation/wikisql_logical_forms.jsonl" # assumes that you have data stored in .data
+docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 bash -c "python /decaNLP/WikiSQL/evaluate.py /decaNLP/.data/wikisql/data/test.jsonl /decaNLP/.data/wikisql/data/test.db /decaNLP/mqan_wikisql_cpu/iteration_57000/test/wikisql_logical_forms.jsonl" # assumes that you have data stored in .data
 ```
 
 ## Inference on a Custom Dataset
@@ -150,7 +150,7 @@ touch .data/my_custom_dataset/val.jsonl
 echo '{"context": "The answer is answer.", "question": "What is the answer?", "answer": "answer"}' >> .data/my_custom_dataset/val.jsonl 
 # TODO add your own examples line by line to val.jsonl in the form of a JSON dictionary, as demonstrated above.
 # Make sure to delete the first line if you don't want the demonstrated example.
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/  bmccann/decanlp:cuda9_torch041 -c "python /decaNLP/predict.py --evaluate valid --path /decaNLP/mqan_decanlp_qa_first_cpu --checkpoint_name iteration_1140000.pth --tasks my_custom_dataset"
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 bash -c "python /decaNLP/predict.py --evaluate valid --path /decaNLP/mqan_decanlp_qa_first_cpu --checkpoint_name iteration_1140000.pth --tasks my_custom_dataset"
 ```
 You should get output that ends with something like this:
 ```
