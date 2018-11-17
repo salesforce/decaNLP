@@ -7,7 +7,7 @@ question answering ([SQuAD](https://rajpurkar.github.io/SQuAD-explorer/)), machi
 Each task is cast as question answering, which makes it possible to use our new Multitask Question Answering Network ([MQAN](https://github.com/salesforce/decaNLP/blob/d594b2bf127e13d0e61151b6a2af3bf63612f380/models/multitask_question_answering_network.py)).
 This model jointly learns all tasks in decaNLP without any task-specific modules or parameters in the multitask setting. For a more thorough introduction to decaNLP and the tasks, see the main [website](http://decanlp.com/), our [blog post](https://einstein.ai/research/the-natural-language-decathlon), or the [paper](https://arxiv.org/abs/1806.08730).
 
-While the research direction associated with this repository focused on multitask learning, the framework itself is designed in a way that should make single-task training, transfer learning, and zero-shot evaluation simple. Similarly, the [paper](https://arxiv.org/abs/1806.08730) focused on multitask learning as a form of question answering, but this framework can be easily adapted for different approached to single-task or multitask learning.
+While the research direction associated with this repository focused on multitask learning, the framework itself is designed in a way that should make single-task training, transfer learning, and zero-shot evaluation simple. Similarly, the [paper](https://arxiv.org/abs/1806.08730) focused on multitask learning as a form of question answering, but this framework can be easily adapted for different approaches to single-task or multitask learning.
 
 ## Leaderboard
 
