@@ -36,7 +36,7 @@ def parse():
     parser.add_argument('--n_jump_start', default=0, type=int, help='how many tasks to jump start (presented in order)')    
     parser.add_argument('--num_print', default=15, type=int, help='how many validation examples with greedy output to print to std out')
 
-    parser.add_argument('--tensorboard', action='store_true', help='Log to tensorboard; may slow down training') 
+    parser.add_argument('--no_tensorboard', action='store_false', dest='tensorboard', help='Turn of tensorboard logging') 
     parser.add_argument('--log_every', default=int(1e2), type=int, help='how often to log results in # of iterations')
     parser.add_argument('--save_every', default=int(1e3), type=int, help='how often to save a checkpoint in # of iterations')
 
@@ -65,6 +65,7 @@ def parse():
     parser.add_argument('--no_transformer_lr', action='store_false', dest='transformer_lr', help='turns off the transformer learning rate strategy') 
     parser.add_argument('--cove', action='store_true', help='whether to use contextualized word vectors (McCann et al. 2017)')
     parser.add_argument('--intermediate_cove', action='store_true', help='whether to use the intermediate layers of contextualized word vectors (McCann et al. 2017)')
+    parser.add_argument('--elmo', action='store_true', help='whether to use deep contextualized word vectors (Peters et al. 2018)')
 
     parser.add_argument('--warmup', default=800, type=int, help='warmup for learning rate')
     parser.add_argument('--grad_clip', default=1.0, type=float, help='gradient clipping')
