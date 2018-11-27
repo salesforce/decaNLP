@@ -31,11 +31,12 @@ class Batch(object):
                     if not field.include_lengths:
                         setattr(self, name, field.process(batch, device=device, train=train))
                     else:
-                        entry, lengths, limited_entry = field.process(batch, device=device, train=train, 
+                        entry, lengths, limited_entry, raw = field.process(batch, device=device, train=train, 
                             limited=field.decoder_stoi, l2f=limited_idx_to_full_idx, oov2l=oov_to_limited_idx)
                         setattr(self, name, entry)
                         setattr(self, f'{name}_lengths', lengths)
                         setattr(self, f'{name}_limited', limited_entry)
+                        setattr(self, f'{name}_elmo', [[s.strip() for s in l] for l in raw])
             setattr(self, f'limited_idx_to_full_idx', limited_idx_to_full_idx)
             setattr(self, f'oov_to_limited_idx', oov_to_limited_idx)
 

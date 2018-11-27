@@ -9,10 +9,7 @@ from torch.nn import functional as F
 from util import get_trainable_params
 
 from cove import MTLSTM
-from allennlp.modules.elmo import Elmo
-options_file = "https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_options.json"
-weight_file = "https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5"
-
+from allennlp.modules.elmo import Elmo, batch_to_ids
 
 from .common import positional_encodings_like, INF, EPSILON, TransformerEncoder, TransformerDecoder, PackedLSTM, LSTMDecoderAttention, LSTMDecoder, Embedding, Feedforward, mask, CoattentiveLayer
 
@@ -27,19 +24,31 @@ class MultitaskQuestionAnsweringNetwork(nn.Module):
         def dp(args):
             return args.dropout_ratio if args.rnn_layers > 1 else 0.
 
-        self.encoder_embeddings = Embedding(field, args.dimension, 
-            dropout=args.dropout_ratio, project=not args.cove)
+        if self.args.elmo:
+            options_file = "https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_options.json"
+            weight_file = "https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5"
+            self.elmo = Elmo(options_file, weight_file, 3, dropout=0.5, do_layer_norm=False)
+            elmo_params = get_trainable_params(self.elmo)
+            for p in elmo_params:
+                p.requires_grad = False
+            elmo_dim = 1024
+            self.project_elmo = Feedforward(elmo_dim, args.dimension)
+        else:
+        
+            self.encoder_embeddings = Embedding(field, args.dimension, 
+                dropout=args.dropout_ratio, project=not args.cove)
+    
+            if self.args.cove or self.args.intermediate_cove:
+                self.cove = MTLSTM(model_cache=args.embeddings, layer0=args.intermediate_cove, layer1=args.cove)
+                cove_params = get_trainable_params(self.cove) 
+                for p in cove_params:
+                    p.requires_grad = False
+                cove_dim = int(args.intermediate_cove) * 600 + int(args.cove) * 600 + 400 # the last 400 is for GloVe and char n-gram embeddings
+                self.project_cove = Feedforward(cove_dim, args.dimension)
+        
         self.decoder_embeddings = Embedding(field, args.dimension, 
             dropout=args.dropout_ratio, project=True)
-
-        if self.args.cove or self.args.intermediate_cove:
-            self.cove = MTLSTM(model_cache=args.embeddings, layer0=args.intermediate_cove, layer1=args.cove)
-            cove_params = get_trainable_params(self.cove) 
-            for p in cove_params:
-                p.requires_grad = False
-            cove_dim = int(args.intermediate_cove) * 600 + int(args.cove) * 600 + 400 # the last 400 is for GloVe and char n-gram embeddings
-            self.project_cove = Feedforward(cove_dim, args.dimension)
-     
+    
         self.bilstm_before_coattention = PackedLSTM(args.dimension,  args.dimension,
             batch_first=True, bidirectional=True, num_layers=1, dropout=0)
         self.coattention = CoattentiveLayer(args.dimension, dropout=0.3)
@@ -75,8 +84,8 @@ class MultitaskQuestionAnsweringNetwork(nn.Module):
         self.decoder_embeddings.set_embeddings(embeddings)
 
     def forward(self, batch):
-        context, context_lengths, context_limited    = batch.context,  batch.context_lengths,  batch.context_limited
-        question, question_lengths, question_limited = batch.question, batch.question_lengths, batch.question_limited
+        context, context_lengths, context_limited, context_elmo    = batch.context,  batch.context_lengths,  batch.context_limited, batch.context_elmo
+        question, question_lengths, question_limited, question_elmo = batch.question, batch.question_lengths, batch.question_limited, batch.question_elmo
         answer, answer_lengths, answer_limited       = batch.answer,   batch.answer_lengths,   batch.answer_limited
         oov_to_limited_idx, limited_idx_to_full_idx  = batch.oov_to_limited_idx, batch.limited_idx_to_full_idx
 
@@ -84,11 +93,17 @@ class MultitaskQuestionAnsweringNetwork(nn.Module):
             return limited_idx_to_full_idx[x]
         self.map_to_full = map_to_full
 
-        context_embedded = self.encoder_embeddings(context)
-        question_embedded = self.encoder_embeddings(question)
-        if self.args.cove:
-            context_embedded = self.project_cove(torch.cat([self.cove(context_embedded[:, :, -300:], context_lengths), context_embedded], -1).detach())
-            question_embedded = self.project_cove(torch.cat([self.cove(question_embedded[:, :, -300:], question_lengths), question_embedded], -1).detach())
+        if self.args.elmo:
+            def elmo(z, device):
+                return self.elmo(batch_to_ids(z).to(device))['elmo_representations'][-1]
+            context_embedded =  self.project_elmo(elmo(context_elmo, context.device).detach())
+            question_embedded = self.project_elmo(elmo(question_elmo, question.device).detach())
+        else:
+            context_embedded = self.encoder_embeddings(context)
+            question_embedded = self.encoder_embeddings(question)
+            if self.args.cove:
+                context_embedded = self.project_cove(torch.cat([self.cove(context_embedded[:, :, -300:], context_lengths), context_embedded], -1).detach())
+                question_embedded = self.project_cove(torch.cat([self.cove(question_embedded[:, :, -300:], question_lengths), question_embedded], -1).detach())
 
         context_encoded = self.bilstm_before_coattention(context_embedded, context_lengths)[0]
         question_encoded = self.bilstm_before_coattention(question_embedded, question_lengths)[0]

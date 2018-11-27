@@ -327,14 +327,14 @@ class Field(RawField):
                     return lim_idx
                
                 lim_arr = [[limited_idx(x) for x in ex] for ex in arr]
-                arr = [[self.vocab.stoi[x] for x in ex] for ex in arr]
+                num = [[self.vocab.stoi[x] for x in ex] for ex in arr]
                         
 #                arr = [[self.vocab.stoi[x] for x in ex] for ex in arr]
             else:
-                arr = [self.vocab.stoi[x] for x in arr]
+                num = [self.vocab.stoi[x] for x in arr]
 
             if self.postprocessing is not None:
-                arr = self.postprocessing(arr, self.vocab, train)
+                num = self.postprocessing(num, self.vocab, train)
         else:
             if self.tensor_type not in self.tensor_types:
                 raise ValueError(
@@ -347,25 +347,25 @@ class Field(RawField):
             # the data is sequential, since it's unclear how to coerce padding tokens
             # to a numeric type.
             if not self.sequential:
-                arr = [numericalization_func(x) if isinstance(x, six.string_types)
+                num = [numericalization_func(x) if isinstance(x, six.string_types)
                        else x for x in arr]
             if self.postprocessing is not None:
-                arr = self.postprocessing(arr, None, train)
+                num = self.postprocessing(num, None, train)
 
-        arr = self.tensor_type(arr)
+        num = self.tensor_type(num)
         lim_arr = self.tensor_type(lim_arr)
         if self.sequential and not self.batch_first:
-            arr.t_()
+            num.t_()
             lim_arr.t_()
         if self.sequential:
-            arr = arr.contiguous()
+            num = num.contiguous()
             lim_arr = lim_arr.contiguous()
-        arr = arr.to(device)
+        num = num.to(device)
         lim_arr = lim_arr.to(device)
 #            if self.include_lengths:
 #                lengths = lengths.cuda(device)
         if self.include_lengths:
-            return arr, lengths, lim_arr
+            return num, lengths, lim_arr, arr
         return arr
 
 
