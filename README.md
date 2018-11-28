@@ -38,7 +38,7 @@ nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decan
 
 If you want to run the same command without CUDA:
 ```bash
-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 bash -c "COMMAND --device -1"
+docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:torch041 bash -c "COMMAND --device -1"
 ```
 
 For those in the Docker know, you can look at the Dockerfiles used to build these two images in `dockerfiles/`.
