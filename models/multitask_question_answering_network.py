@@ -27,7 +27,7 @@ class MultitaskQuestionAnsweringNetwork(nn.Module):
         if self.args.elmo:
             options_file = "https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_options.json"
             weight_file = "https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x4096_512_2048cnn_2xhighway/elmo_2x4096_512_2048cnn_2xhighway_weights.hdf5"
-            self.elmo = Elmo(options_file, weight_file, 3, dropout=0.5, do_layer_norm=False)
+            self.elmo = Elmo(options_file, weight_file, 3, dropout=0.0, do_layer_norm=False)
             elmo_params = get_trainable_params(self.elmo)
             for p in elmo_params:
                 p.requires_grad = False
