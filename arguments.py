@@ -65,7 +65,8 @@ def parse():
     parser.add_argument('--no_transformer_lr', action='store_false', dest='transformer_lr', help='turns off the transformer learning rate strategy') 
     parser.add_argument('--cove', action='store_true', help='whether to use contextualized word vectors (McCann et al. 2017)')
     parser.add_argument('--intermediate_cove', action='store_true', help='whether to use the intermediate layers of contextualized word vectors (McCann et al. 2017)')
-    parser.add_argument('--elmo', action='store_true', help='whether to use deep contextualized word vectors (Peters et al. 2018)')
+    parser.add_argument('--elmo', default=[-1], nargs='+', type=int,  help='which layer(s) (0, 1, or 2) of ELMo (Peters et al. 2018) to use; -1 for none ')
+    parser.add_argument('--no_glove_and_char', action='store_false', dest='glove_and_char', help='turn off GloVe and CharNGram embeddings')
 
     parser.add_argument('--warmup', default=800, type=int, help='warmup for learning rate')
     parser.add_argument('--grad_clip', default=1.0, type=float, help='gradient clipping')
@@ -119,7 +120,7 @@ def parse():
         f'{args.world_size}g',
         args.commit[:7])
     args.dist_sync_file = os.path.join(args.log_dir, 'distributed_sync_file')
-
+    
     save_args(args)
 
     return args
