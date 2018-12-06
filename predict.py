@@ -20,11 +20,11 @@ def get_all_splits(args, new_vocab):
         print(f'Loading {task}')
         kwargs = {}
         if not 'train' in args.evaluate:
-            kwargs['train'] =  None
-        if not 'valid' in  args.evaluate:
-            kwargs['validation'] =  None
+            kwargs['train'] = None
+        if not 'valid' in args.evaluate:
+            kwargs['validation'] = None
         if not 'test' in args.evaluate:
-            kwargs['test'] =  None
+            kwargs['test'] = None
         s = get_splits(args, task, new_vocab, **kwargs)[0]
         preprocess_examples(args, [task], [s], new_vocab, train=False)
         splits.append(s)
@@ -207,11 +207,11 @@ def get_args():
                     'transformer_layers', 'rnn_layers', 'transformer_hidden', 
                     'dimension', 'load', 'max_val_context_length', 'val_batch_size', 
                     'transformer_heads', 'max_output_length', 'max_generative_vocab', 
-                    'lower', 'cove', 'intermediate_cove']
+                    'lower', 'cove', 'intermediate_cove', 'elmo']
         for r in retrieve:
             if r in config:
-                setattr(args, r,  config[r])
-            elif 'cove' in r:
+                setattr(args, r, config[r])
+            elif 'cove' in r or 'elmo' in r:
                 setattr(args, r, False)
             else:
                 setattr(args, r, None)
