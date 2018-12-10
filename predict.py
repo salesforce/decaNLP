@@ -207,14 +207,14 @@ def get_args():
                     'transformer_layers', 'rnn_layers', 'transformer_hidden', 
                     'dimension', 'load', 'max_val_context_length', 'val_batch_size', 
                     'transformer_heads', 'max_output_length', 'max_generative_vocab', 
-                    'lower', 'cove', 'intermediate_cove']
+                    'lower', 'cove', 'intermediate_cove', 'elmo', 'glove_and_char']
         for r in retrieve:
             if r in config:
                 setattr(args, r,  config[r])
             elif 'cove' in r:
                 setattr(args, r, False)
             elif 'elmo' in r:
-                setattr(args, r, False)
+                setattr(args, r, [-1])
             elif 'glove_and_char' in r:
                 setattr(args, r, True)
             else:

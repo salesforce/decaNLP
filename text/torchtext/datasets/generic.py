@@ -776,7 +776,7 @@ class WinogradSchema(CQA, data.Dataset):
     def sort_key(ex):
         return data.interleave_keys(len(ex.context), len(ex.answer))
 
-    urls = []
+    urls = ['https://s3.amazonaws.com/research.metamind.io/decaNLP/data/schema.txt']
 
     name = 'schema'
     dirname = ''
