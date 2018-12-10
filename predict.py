@@ -213,6 +213,10 @@ def get_args():
                 setattr(args, r,  config[r])
             elif 'cove' in r:
                 setattr(args, r, False)
+            elif 'elmo' in r:
+                setattr(args, r, False)
+            elif 'glove_and_char' in r:
+                setattr(args, r, True)
             else:
                 setattr(args, r, None)
         args.dropout_ratio = 0.0
