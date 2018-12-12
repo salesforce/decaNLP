@@ -9,7 +9,7 @@ from torch.nn import functional as F
 from util import get_trainable_params
 
 from cove import MTLSTM
-from allennlp.modules.elmo import Elmo, batch_to_ids
+#from allennlp.modules.elmo import Elmo, batch_to_ids
 
 from .common import positional_encodings_like, INF, EPSILON, TransformerEncoder, TransformerDecoder, PackedLSTM, LSTMDecoderAttention, LSTMDecoder, Embedding, Feedforward, mask, CoattentiveLayer
 

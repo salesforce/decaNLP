@@ -93,23 +93,29 @@ def run(args, field, val_sets, model):
                 ids_file_name = answer_file_name.replace('gold', 'ids')
             if os.path.exists(prediction_file_name):
                 print('** ', prediction_file_name, ' already exists -- this is where predictions are stored **')
+                if args.overwrite:
+                    print('**** overwriting ', prediction_file_name, ' ****')
             if os.path.exists(answer_file_name):
                 print('** ', answer_file_name, ' already exists -- this is where ground truth answers are stored **')
+                if args.overwrite:
+                    print('**** overwriting ', answer_file_name, ' ****')
             if os.path.exists(results_file_name):
                 print('** ', results_file_name, ' already exists -- this is where metrics are stored **')
-                with open(results_file_name) as results_file:
-                  for l in results_file:
-                      print(l)
-                if not args.overwrite_predictions and args.silent:
+                if args.overwrite:
+                    print('**** overwriting ', results_file_name, ' ****')
+                else:
                     with open(results_file_name) as results_file:
-                          metrics = json.loads(results_file.readlines()[0])
-                          decaScore.append(metrics[args.task_to_metric[task]])
+                        if not args.silent:
+                            for l in results_file:
+                                print(l)
+                        metrics = json.loads(results_file.readlines()[0])
+                        decaScore.append(metrics[args.task_to_metric[task]])
                     continue
 
             for x in [prediction_file_name, answer_file_name, results_file_name]:
                 os.makedirs(os.path.dirname(x), exist_ok=True)
     
-            if not os.path.exists(prediction_file_name) or args.overwrite_predictions:
+            if not os.path.exists(prediction_file_name) or args.overwrite:
                 with open(prediction_file_name, 'w') as prediction_file:
                     predictions = []
                     ids = []
@@ -141,7 +147,7 @@ def run(args, field, val_sets, model):
             def from_all_answers(an):
                 return [it.dataset.all_answers[sid] for sid in an.tolist()] 
     
-            if not os.path.exists(answer_file_name):
+            if not os.path.exists(answer_file_name) or args.overwrite:
                 with open(answer_file_name, 'w') as answer_file:
                     answers = []
                     for batch_idx, batch in enumerate(it):
@@ -161,7 +167,7 @@ def run(args, field, val_sets, model):
                     answers = [json.loads(x.strip()) for x in answer_file.readlines()] 
     
             if len(answers) > 0:
-                if not os.path.exists(results_file_name):
+                if not os.path.exists(results_file_name) or args.overwrite:
                     metrics, answers = compute_metrics(predictions, answers, bleu='iwslt' in task or 'multi30k' in task or args.bleu, dialogue='woz' in task,
                         rouge='cnn' in task or 'dailymail' in task or args.rouge, logical_form='sql' in task, corpus_f1='zre' in task, args=args)
                     with open(results_file_name, 'w') as results_file:
@@ -173,14 +179,14 @@ def run(args, field, val_sets, model):
                 if not args.silent:
                     for i, (p, a) in enumerate(zip(predictions, answers)):
                         print(f'Prediction {i+1}: {p}\nAnswer {i+1}: {a}\n')
-                print(metrics)
+                    print(metrics)
                 decaScore.append(metrics[args.task_to_metric[task]])
+
     print(f'Evaluated Tasks:\n')
     for i, (task, _) in enumerate(iters):
         print(f'{task}: {decaScore[i]}')
     print(f'-------------------')
     print(f'DecaScore:  {sum(decaScore)}\n')
-    
     print(f'\nSummary: | {sum(decaScore)} | {" | ".join([str(x) for x in decaScore])} |\n')
 
 
@@ -196,7 +202,7 @@ def get_args():
     parser.add_argument('--checkpoint_name')
     parser.add_argument('--bleu', action='store_true', help='whether to use the bleu metric (always on for iwslt)')
     parser.add_argument('--rouge', action='store_true', help='whether to use the bleu metric (always on for cnn, dailymail, and cnn_dailymail)')
-    parser.add_argument('--overwrite_predictions', action='store_true', help='whether to overwrite previously written predictions')
+    parser.add_argument('--overwrite', action='store_true', help='whether to overwrite previously written predictions')
     parser.add_argument('--silent', action='store_true', help='whether to print predictions to stdout')
 
     args = parser.parse_args()
@@ -232,10 +238,11 @@ def get_args():
         'zre': 'corpus_f1',
         'schema': 'em'}
 
-    if os.path.exists(os.path.join(args.path, 'process_0.log')):
-        args.best_checkpoint = get_best(args)
-    else:
+    if not args.checkpoint_name is None:
         args.best_checkpoint = os.path.join(args.path, args.checkpoint_name)
+    else:
+        assert os.path.exists(os.path.join(args.path, 'process_0.log'))
+        args.best_checkpoint = get_best(args)
            
     return args
 

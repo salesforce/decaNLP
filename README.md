@@ -13,6 +13,7 @@ While the research direction associated with this repository focused on multitas
 
 | Model | decaNLP | [SQuAD](https://rajpurkar.github.io/SQuAD-explorer/) | [IWSLT](https://wit3.fbk.eu/mt.php?release=2016-01) | [CNN/DM](https://cs.nyu.edu/~kcho/DMQA/) | [MNLI](https://www.nyu.edu/projects/bowman/multinli/) | [SST](https://nlp.stanford.edu/sentiment/treebank.html) | [QA&#8209;SRL](https://dada.cs.washington.edu/qasrl/) | [QA&#8209;ZRE](http://nlp.cs.washington.edu/zeroshot/) | [WOZ](https://github.com/nmrksic/neural-belief-tracker/tree/master/data/woz) | [WikiSQL](https://github.com/salesforce/WikiSQL) | [MWSC](https://s3.amazonaws.com/research.metamind.io/decaNLP/data/schema.txt) |
 | --- | --- | --- | --- | --- | --- | --- | ---- | ---- | --- | --- |--- | 
+| [MQAN](https://arxiv.org/abs/1806.08730)(Better Sampling+[CoVe](http://papers.nips.cc/paper/7209-learned-in-translation-contextualized-word-vectors)) | 608.9687963636 | 77.0417861486 | 21.3824477725 | 24.3900766008 | 74.02 | 86.4678899083 | 80.935100999 | 40.9381663113 | 84.8192771084 | 70.1935637098 | 48.7804878050 | 
 | [MQAN](https://arxiv.org/abs/1806.08730)(QA&#8209;first+[CoVe](http://papers.nips.cc/paper/7209-learned-in-translation-contextualized-word-vectors)) | 599.9 | 75.5 | 18.9 | 24.4 | 73.6 | 86.4 | 80.8 | 37.4 | 85.8 | 68.5 | 48.8 |
 | [MQAN](https://arxiv.org/abs/1806.08730)(QA&#8209;first) | 590.5 | 74.4 | 18.6 | 24.3 | 71.5 | 87.4 | 78.4 | 37.6 | 84.8 | 64.8 | 48.7 |
 | [S2S](https://arxiv.org/abs/1806.08730) | 513.6 | 47.5 | 14.2 | 25.7 | 60.9 | 85.9 | 68.7 | 28.5 | 84.0 | 45.8 | 52.4 |
@@ -116,9 +117,9 @@ For test performance, please use the original [SQuAD](https://rajpurkar.github.i
 This model is the best MQAN trained on decaNLP so far. It was trained first on SQuAD and then on all of decaNLP. It uses [CoVe](http://papers.nips.cc/paper/7209-learned-in-translation-contextualized-word-vectors.pdf) as well. You can obtain this model and run it on the validation sets with the following.
 
 ```bash
-wget https://s3.amazonaws.com/research.metamind.io/decaNLP/pretrained/mqan_decanlp_qa_first_cove_cpu.tar.gz
-tar -xvzf mqan_decanlp_qa_first_cove_cpu.tar.gz
-nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 bash -c "python /decaNLP/predict.py --evaluate validation --path /decaNLP/mqan_decanlp_qa_first_cove_cpu/ --device 0 --silent"
+wget https://s3.amazonaws.com/research.metamind.io/decaNLP/pretrained/mqan_decanlp_better_sampling_cove_cpu.tgz
+tar -xvzf mqan_decanlp_better_sampling_cove_cpu.tgz
+nvidia-docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 bash -c "python /decaNLP/predict.py --evaluate validation --path /decaNLP/mqan_decanlp_better_sampling_cove_cpu/ --checkpoint_name iteration_560000.pth --device 0 --silent"
 ```
 
 This model is the best MQAN trained on WikiSQL alone, which established [a new state-of-the-art performance by several points on that task](https://github.com/salesforce/WikiSQL): 73.2 / 75.4 / 81.4 (ordered test logical form accuracy, unordered test logical form accuracy, test execution accuracy).
