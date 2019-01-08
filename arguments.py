@@ -25,9 +25,11 @@ def parse():
     Returns the arguments from the command line.
     """
     parser = ArgumentParser()
-    parser.add_argument('--data', default='/decaNLP/.data/', type=str, help='where to load data from.')
-    parser.add_argument('--save', default='/decaNLP/results', type=str, help='where to save results.')
-    parser.add_argument('--embeddings', default='/decaNLP/.embeddings', type=str, help='where to save embeddings.')
+    parser.add_argument('--root', default='/decaNLP', type=str, help='root directory for data, results, embeddings, code, etc.')
+    parser.add_argument('--data', default='.data/', type=str, help='where to load data from.')
+    parser.add_argument('--save', default='results', type=str, help='where to save results.')
+    parser.add_argument('--embeddings', default='.embeddings', type=str, help='where to save embeddings.')
+    parser.add_argument('--name', default='', type=str, help='name of the experiment; if blank, a name is automatically generated from the arguments')
 
     parser.add_argument('--train_tasks', nargs='+', type=str, help='tasks to use for training', required=True)
     parser.add_argument('--train_iterations', nargs='+', type=int, help='number of iterations to focus on each task')
@@ -119,8 +121,12 @@ def parse():
         f'{train_out}{(",val=" + ",".join(args.val_tasks)) if args.val_tasks != args.train_tasks else ""},{args.model},' \
         f'{args.world_size}g',
         args.commit[:7])
+    if len(args.name) > 0:
+        args.log_dir = os.path.join(args.save, args.name)
     args.dist_sync_file = os.path.join(args.log_dir, 'distributed_sync_file')
     
     save_args(args)
+    for x in ['data', 'save', 'embeddings']:
+        setattr(args, x, os.path.join(args.root, getattr(args, x)))
 
     return args
