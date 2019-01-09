@@ -90,7 +90,11 @@ def parse():
     if args.model is None:
         args.model = 'mcqa'
     if args.val_tasks is None:
-        args.val_tasks = deepcopy(args.train_tasks)
+        args.val_tasks = []
+        for t in args.train_tasks:
+            if t not in args.val_tasks:
+                args.val_tasks.append(t)
+
     if 'imdb' in args.val_tasks:
         args.val_tasks.remove('imdb')
     args.world_size = len(args.devices) if args.devices[0] > -1 else -1
