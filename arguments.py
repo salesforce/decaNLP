@@ -64,7 +64,6 @@ def parse():
     parser.add_argument('--transformer_hidden', default=150, type=int, help='hidden size of the transformer modules')
     parser.add_argument('--transformer_heads', default=3, type=int, help='number of heads for transformer modules')
     parser.add_argument('--dropout_ratio', default=0.2, type=float, help='dropout for the model')
-    parser.add_argument('--no_transformer_lr', action='store_false', dest='transformer_lr', help='turns off the transformer learning rate strategy') 
     parser.add_argument('--cove', action='store_true', help='whether to use contextualized word vectors (McCann et al. 2017)')
     parser.add_argument('--intermediate_cove', action='store_true', help='whether to use the intermediate layers of contextualized word vectors (McCann et al. 2017)')
     parser.add_argument('--elmo', default=[-1], nargs='+', type=int,  help='which layer(s) (0, 1, or 2) of ELMo (Peters et al. 2018) to use; -1 for none ')
@@ -73,6 +72,9 @@ def parse():
     parser.add_argument('--warmup', default=800, type=int, help='warmup for learning rate')
     parser.add_argument('--grad_clip', default=1.0, type=float, help='gradient clipping')
     parser.add_argument('--beta0', default=0.9, type=float, help='alternative momentum for Adam (only when not using transformer_lr)')
+    parser.add_argument('--optimizer', default='adam', type=str, help='Adam or SGD')
+    parser.add_argument('--no_transformer_lr', action='store_false', dest='transformer_lr', help='turns off the transformer learning rate strategy') 
+    parser.add_argument('--sgd_lr', default=1.0, type=float, help='learning rate for SGD (if not using Adam)')
 
     parser.add_argument('--load', default=None, type=str, help='path to checkpoint to load model from inside args.save')
     parser.add_argument('--resume', action='store_true', help='whether to resume training with past optimizers')
