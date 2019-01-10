@@ -131,8 +131,8 @@ def parse():
         args.log_dir = os.path.join(args.save, args.name)
     args.dist_sync_file = os.path.join(args.log_dir, 'distributed_sync_file')
     
-    save_args(args)
-    for x in ['data', 'save', 'embeddings', 'log_dir']:
+    for x in ['data', 'save', 'embeddings', 'log_dir', 'dist_sync_file']:
         setattr(args, x, os.path.join(args.root, getattr(args, x)))
+    save_args(args)
 
     return args
