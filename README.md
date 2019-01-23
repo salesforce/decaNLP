@@ -136,6 +136,20 @@ docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda
 docker run -it --rm -v `pwd`:/decaNLP/ -u $(id -u):$(id -g) bmccann/decanlp:cuda9_torch041 bash -c "python /decaNLP/WikiSQL/evaluate.py /decaNLP/.data/wikisql/data/test.jsonl /decaNLP/.data/wikisql/data/test.db /decaNLP/mqan_wikisql_cpu/iteration_57000/test/wikisql_logical_forms.jsonl" # assumes that you have data stored in .data
 ```
 
+You can similarly follow the instructions above for downloading, decompressing, and loading in pretrained models for other indivual tasks (single-task models):
+
+```bash
+wget https://s3.amazonaws.com/research.metamind.io/decaNLP/pretrained/squad_mqan_cove_cpu.tgz
+wget https://s3.amazonaws.com/research.metamind.io/decaNLP/pretrained/cnn_dailymail_mqan_cove_cpu.tgz
+wget https://s3.amazonaws.com/research.metamind.io/decaNLP/pretrained/iwslt.en.de_mqan_cove_cpu.tgz
+wget https://s3.amazonaws.com/research.metamind.io/decaNLP/pretrained/sst_mqan_cove_cpu.tgz
+wget https://s3.amazonaws.com/research.metamind.io/decaNLP/pretrained/multinli.in.out_mqan_cove_cpu.tgz
+wget https://s3.amazonaws.com/research.metamind.io/decaNLP/pretrained/woz.en_mqan_cove_cpu.tgz
+wget https://s3.amazonaws.com/research.metamind.io/decaNLP/pretrained/srl_mqan_cove_cpu.tgz
+wget https://s3.amazonaws.com/research.metamind.io/decaNLP/pretrained/zre_mqan_cove_cpu.tgz
+wget https://s3.amazonaws.com/research.metamind.io/decaNLP/pretrained/schema_mqan_cove_cpu.tgz
+```
+
 ## Inference on a Custom Dataset
 
 Using a pretrained model or a model you have trained yourself, you can run on new, custom datasets easily by following the instructions below. In this example, we use the checkpoint for the best MQAN trained on the entirety of decaNLP (see the section on Pretrained Models to see how to get this checkpoint) to run on `my_custom_dataset`.
