@@ -1,7 +1,6 @@
 import jsonlines
 
-question = "What’s the tweet’s emotion, \
-    angry or fearful or joyful or sad, and what’s the intensity level, slightly or fairly or extremely?"
+question = "What’s the tweet’s emotion, angry or fearful or joyful or sad, and what’s the intensity level, slightly or fairly or extremely?"
 
 mood = {'anger':'angry', 'fear':'fearful', 'joy':'joyful', 'sadness':'sad'}
 
