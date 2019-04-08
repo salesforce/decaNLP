@@ -16,7 +16,7 @@ output_path = 'train.jsonl'
 
 def label(its, noun):
     if its >= 0 and its < 0.33:
-        return "slight " + mood[noun]
+        return "slightly " + mood[noun]
     elif its >= 0.33 and its < 0.67:
         return "fairly " + mood[noun]
     else:
