@@ -184,6 +184,19 @@ def f1_score(prediction, ground_truth):
 def exact_match(prediction, ground_truth):
     return prediction == ground_truth
 
+mood_score={"slightly":"zero zero","fairly":"zero one","extremely":"one one"}
+def f1_em(prediction, ground_truth):
+    prediction_tokens =  prediction.split()
+    ground_truth_tokens =  ground_truth.split()
+    print("prediction=",prediction)
+    print("ground_truth=",ground_truth)
+    if len(prediction_tokens)!=2 or prediction_tokens[0] not in mood_score.keys():
+        return 0
+    
+    pred_intensity=mood_score[prediction_tokens[0]]
+    truth_intensity=mood_score[ground_truth_tokens[0]]
+    return exact_match(prediction_tokens[1],ground_truth_tokens[1])*f1_score(pred_intensity,truth_intensity)
+
 def metric_max_over_ground_truths(metric_fn, prediction, ground_truths):
     scores_for_ground_truths = []
     for idx, ground_truth in enumerate(ground_truths):
@@ -201,7 +214,9 @@ def computeEM(outputs, targets):
 def computeBLEU(outputs, targets):
     targets = [[t[i] for t in targets] for i in range(len(targets[0]))]
     return corpus_bleu(outputs, targets, lowercase=True).score
-       
+
+def computeMood(outputs, targets):
+    return sum([metric_max_over_ground_truths(f1_em, o, t) for o, t in zip(outputs, targets)])/len(outputs) * 100
                 
 class Rouge(Rouge155):
     """Rouge calculator class with custom command-line options."""
@@ -378,7 +393,7 @@ def computeDialogue(greedy, answer):
     return joint_goal_em, turn_request_em, turn_goal_em, answer
         
 
-def compute_metrics(greedy, answer, rouge=False, bleu=False, corpus_f1=False, logical_form=False, args=None, dialogue=False):
+def compute_metrics(greedy, answer, rouge=False, bleu=False, corpus_f1=False, logical_form=False, args=None, dialogue=False, mood_metric=False):
     metric_keys = []
     metric_values = []
     if not isinstance(answer[0], list):
@@ -410,6 +425,10 @@ def compute_metrics(greedy, answer, rouge=False, bleu=False, corpus_f1=False, lo
     nem = computeEM(norm_greedy, norm_answer)
     metric_keys.extend(['nf1', 'nem'])
     metric_values.extend([nf1, nem])
+    if mood_metric:
+        mf1=computeMood(norm_greedy, norm_answer)
+        metric_keys.append('mood_metric')
+        metric_values.append(mf1)
     if corpus_f1:
         corpus_f1, precision, recall = computeCF1(norm_greedy, norm_answer)
         metric_keys += ['corpus_f1', 'precision', 'recall']

@@ -15,6 +15,7 @@ from . import sst
 from . import imdb
 from . import snli
 from . import translation
+from . import mood
 
 from .. import data
 
@@ -137,6 +138,67 @@ class SST(CQA):
             os.path.join(path, f'{test}{postfix}'), fields, **kwargs)
         return tuple(d for d in (train_data, validation_data, test_data)
                      if d is not None)
+
+
+class Mood(CQA):
+    
+    urls = [] #TODO
+    name = 'mood'
+    dirname = ''
+
+    @staticmethod
+    def sort_key(ex):
+        return data.interleave_keys(len(ex.context), len(ex.answer))
+
+    def __init__(self, path, field, subsample=None, **kwargs):
+        fields = [(x, field) for x in self.fields]
+        cache_name = os.path.join(os.path.dirname(path), '.cache', os.path.basename(path), str(subsample))
+
+        examples = []
+        if os.path.exists(cache_name):
+            print(f'Loading cached data from {cache_name}')
+            examples = torch.load(cache_name)
+        else:
+            labels = ['extremely angry', 'extremely joyful', 'extremely sad', 'extremely fearful',
+                      'fairly angry', 'fairly joyful', 'fairly sad', 'fairly fearful',
+                      'slightly angry', 'slightly joyful', 'slightly sad', 'slightly fearful']
+            question =  "What’s the tweet’s emotion, angry or fearful or joyful or sad, " \
+                        "and what’s the intensity level, slightly or fairly or extremely?"
+
+            with io.open(os.path.expanduser(path), encoding='utf8') as f:
+                next(f)
+                for line in f:
+                    parsed = list(csv.reader([line.rstrip('\n')]))[0]
+                    context = parsed[-1]
+                    answer = labels[int(parsed[0])]
+                    context_question = get_context_question(context, question)
+                    examples.append(data.Example.fromlist(
+                        [context, question, answer, CONTEXT_SPECIAL, QUESTION_SPECIAL, context_question], fields))
+
+                    if subsample is not None and len(examples) > subsample:
+                        break
+
+            os.makedirs(os.path.dirname(cache_name), exist_ok=True)
+            print(f'Caching data to {cache_name}')
+            torch.save(examples, cache_name)
+
+        self.examples = examples
+        super().__init__(examples, fields, **kwargs)
+
+    @classmethod
+    def splits(cls, fields, root='.data',
+               train='train', validation='dev', test='test', **kwargs):
+        path = cls.download(root)
+        postfix = f'_binary_sent.csv'
+        train_data = None if train is None else cls(
+            os.path.join(path, f'{train}{postfix}'), fields, **kwargs)
+        validation_data = None if validation is None else cls(
+            os.path.join(path, f'{validation}{postfix}'), fields, **kwargs)
+        test_data = None if test is None else cls(
+            os.path.join(path, f'{test}{postfix}'), fields, **kwargs)
+        return tuple(d for d in (train_data, validation_data, test_data)
+                     if d is not None)
+
 
 
 class TranslationDataset(translation.TranslationDataset):

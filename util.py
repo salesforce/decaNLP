@@ -163,6 +163,9 @@ def get_splits(args, task, FIELD, **kwargs):
     elif 'sst' in task:
         split = torchtext.datasets.generic.SST.splits(
             fields=FIELD, root=args.data, **kwargs)
+    elif 'mood' in task:
+    split = torchtext.datasets.generic.Mood.splits(
+                                                  fields=FIELD, root=args.data, **kwargs)
     elif 'imdb' in task:
         kwargs['validation'] = None
         split = torchtext.datasets.generic.IMDb.splits(

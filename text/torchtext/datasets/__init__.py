@@ -6,7 +6,7 @@ from .sequence_tagging import SequenceTaggingDataset, UDPOS # NOQA
 from .trec import TREC
 from .imdb import IMDb
 from . import generic
-
+from .mood import Mood
 
 __all__ = ['LanguageModelingDataset',
            'SNLI',
@@ -20,4 +20,5 @@ __all__ = ['LanguageModelingDataset',
            'IMDb',
            'SequenceTaggingDataset',
            'UDPOS',
+           'Mood'
            ]
