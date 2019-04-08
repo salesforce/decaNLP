@@ -5,11 +5,15 @@ question = "What’s the tweet’s emotion, \
 
 mood = {'anger':'angry', 'fear':'fearful', 'joy':'joyful', 'sadness':'sad'}
 
+# train files now, also need to dump test file later
 filepath = ["train/anger_train.txt", "train/fear_train.txt", "train/joy_train.txt", "train/sadness_train.txt"]
 
+#just for display of jsonl file
 displaynum = 10
 
-output_path = 'train.jsonl' #'.data/mood_detection_dataset/val.jsonl'
+# This should be '.data/mood_detection_dataset/val.jsonl'
+# And we need to run commands: mkdir -p .data/my_custom_dataset/ first to create .data folder
+output_path = 'train.jsonl' 
 
 def label(its, noun):
     if its >= 0 and its < 0.33:
