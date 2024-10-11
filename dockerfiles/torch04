@@ -30,24 +30,24 @@ ENV LC_ALL en_US.UTF-8
 RUN conda install -c pytorch pytorch=0.4.1
 
 # Revtok
-RUN pip install -e git+https://github.com/jekbradbury/revtok.git#egg=revtok
+RUN pip install --no-cache-dir -e git+https://github.com/jekbradbury/revtok.git#egg=revtok
 
 # torchtext requirements
-RUN pip install tqdm 
-RUN pip install nltk==3.2.5
+RUN pip install --no-cache-dir tqdm 
+RUN pip install --no-cache-dir nltk==3.2.5
 
 # tensorboard
-RUN pip install tensorboardX
-RUN pip install tensorboard
-RUN pip install tensorflow
-RUN pip install python-dateutil
+RUN pip install --no-cache-dir tensorboardX
+RUN pip install --no-cache-dir tensorboard
+RUN pip install --no-cache-dir tensorflow
+RUN pip install --no-cache-dir python-dateutil
 
 # additional python packages
-RUN pip install ujson
-RUN pip install -e git+git://github.com/andersjo/pyrouge.git#egg=pyrouge
+RUN pip install --no-cache-dir ujson
+RUN pip install --no-cache-dir -e git+git://github.com/andersjo/pyrouge.git#egg=pyrouge
 RUN cd /src/pyrouge/pyrouge/../tools/ROUGE-1.5.5/data/ && rm WordNet-2.0.exc.db && ./WordNet-2.0-Exceptions/buildExeptionDB.pl ./WordNet-2.0-Exceptions ./smart_common_words.txt ./WordNet-2.0.exc.db && chmod 777 WordNet-2.0.exc.db
-#RUN pip install lxml
-RUN pip install sacrebleu
+#RUN pip install --no-cache-dir lxml
+RUN pip install --no-cache-dir sacrebleu
 
 # Install packages for XML processing
 RUN apt-get install --yes \
@@ -61,11 +61,11 @@ RUN apt-get install --yes \
   python-lxml
 
 # WikISQL evaluation
-RUN pip install records
-RUN pip install babel
-RUN pip install tabulate
+RUN pip install --no-cache-dir records
+RUN pip install --no-cache-dir babel
+RUN pip install --no-cache-dir tabulate
 
-RUN pip install -e git+git://github.com/salesforce/cove.git#egg=cove
-RUN pip install allennlp
+RUN pip install --no-cache-dir -e git+git://github.com/salesforce/cove.git#egg=cove
+RUN pip install --no-cache-dir allennlp
 
 CMD bash 
